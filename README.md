@@ -1,4 +1,6 @@
 # *ProxyKot :)*
+`Discord: myleader`
+
 **A Useful Tool To Validate If A Proxy Or Multiple Are Able To Make A Successful `GET HTTP` Request.**
 # *Usage*
 - `python3 ProxyKot.py [Options]`
@@ -12,7 +14,9 @@
 - Validating A List Of Proxies
 - Validating A Singular Proxy
 # *Super Efficient & Fast Tool To Validate Working Proxies*
-*This Is Only The First Release Of This Tool, In The Future This
+\*This Is Only The First Release Of This Tool, In The Future This
 Tool Will Have More Options Such As Supporting HTTPS And Other.
 There Will Be An Optional Terminal UI, The Tool Itself Will Be
-Even Faster And More Efficient.*
+Even Faster And More Efficient.\*
+
+![](https://github.com/the-computer-mayor/ProxyKot/blob/main/image.png?raw=true)
