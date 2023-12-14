@@ -11,5 +11,8 @@
 - Normal & Raw Output
 - Validating A List Of Proxies
 - Validating A Singular Proxy
-# OverLook
-Super Efficient & Fast Tool To Validate Working Proxies.
+# *Super Efficient & Fast Tool To Validate Working Proxies*
+*This Is Only The First Release Of This Tool, In The Future This
+Tool Will Have More Options Such As Supporting HTTPS And Other.
+There Will Be An Optional Terminal UI, The Tool Itself Will Be
+Even Faster And More Efficient.*
