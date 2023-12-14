@@ -93,7 +93,7 @@ try:
             return "valid"
 
 
-    # Connecting With IP Function
+    # Proxy Health
     def is_available(Ip,PORT):
         try:
             TimeConnectStart = perf_counter()
