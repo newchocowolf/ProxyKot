@@ -10,7 +10,7 @@
 # Features
 - Changing Threading Limit **`Default Is 4`**
 - Changing Timeout Limit **`Default Is 3`**
-- Normal & Raw Output
+- Raw Output Available
 - Validating A List Of Proxies
 - Validating A Singular Proxy
 # *Super Efficient & Fast Tool To Validate Working Proxies*
