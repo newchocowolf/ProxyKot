@@ -13,7 +13,7 @@
 - Raw Output Available
 - Validating A List Of Proxies
 - Validating A Singular Proxy
-- No Additional Python Modules Needed
+- No Additional Python Libraries Needed **`Only Regular Python3 Built-In Libraries`**
 - Very Easy To Use 
 # *Super Efficient & Fast Tool To Validate Proxies*
 \*This Is Only The First Release Of This Tool, In The Future This
