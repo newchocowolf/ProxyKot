@@ -13,6 +13,8 @@
 - Raw Output Available
 - Validating A List Of Proxies
 - Validating A Singular Proxy
+- No Additional Python Modules Needed
+- Very Easy To Use 
 # *Super Efficient & Fast Tool To Validate Working Proxies*
 \*This Is Only The First Release Of This Tool, In The Future This
 Tool Will Have More Options Such As Supporting HTTPS And Other.
