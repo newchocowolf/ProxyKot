@@ -108,7 +108,7 @@ try:
             return "valid"
 
 
-    # Connecting With IP Function
+    # Proxy Health
     def is_available(Ip,PORT):
         try:
             TimeConnectStart = perf_counter()
@@ -362,11 +362,11 @@ try:
                 raise SystemExit
             
             except FileNotFoundError: 
-                if NotRaw: print(f"\n    {r}\"{p}{path[0]}/{proxy_list_file_arg}{r}\"{y} Doesn't Exist.{m0}\n")
+                if NotRaw: print(f"\n    {r}\"{p}{proxy_list_file_arg}{r}\"{y} Doesn't Exist.{m0}\n")
                 else: print(f"{y}?{m0}")
                 raise SystemExit
             
 
 except SystemExit:None
-except (SystemExit, KeyboardInterrupt):print(f"\n{r}Goodbye!.{m0}")
+except (SystemExit, KeyboardInterrupt):print(f"\n{r}Goodbye!.{m0}") if NotRaw else None
 except:print("        \033[1;31m==[ERROR]==\033[0m");import traceback;traceback.print_exc()
