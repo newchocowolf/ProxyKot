@@ -2,13 +2,23 @@ try:
     # Libraries
     from time import perf_counter
     from sys import version_info
+    from random import randint
+    from time import sleep
     from os import system
     from json import load
     from sys import argv
     from sys import path
     import threading
     import socket
-    from time import sleep
+
+
+    # Default Settings
+    with open(path[0]+"/settings.json") as json_file:
+        settings = load(json_file)
+
+    timeout = int(settings["timeout"])
+    test_server = settings["test_server"]
+    threads = int(settings["threads"])
 
 
     # Default Vars
@@ -28,32 +38,37 @@ try:
     p = "\033[1;35m"
     y = "\033[1;33m"
     NotRaw = True
+    HELP_TXT = """\033[1;35m                                    _____                      \033[1;31m_  __     _   
+\033[1;35m                                    |  __ \\                   \033[1;31m| |/ /    | |  
+\033[1;35m                                    | |__) | __ _____  ___   _\033[1;31m| ' / ___ | |_ 
+\033[1;35m                                    |  ___/ '__/ _ \\ \\/ / | | \033[1;31m|  < / _ \\| __|            \033[1;32mDiscord: myleader
+\033[1;35m                                    | |   | | | (_) >  <| |_| \033[1;31m| . \\ (_) | |_             \033[1;32mGithub: the-computer-mayor
+\033[1;35m                                    |_|   |_|  \\___/_/\\_\\\\__, \033[1;31m|_|\\_\\___/ \\__|
+\033[1;35m                                                        __/ |              
+\033[1;35m                                                        |___/               
+
+                                 \033[0mA Useful Tool To Validate If A Proxy Or Multiple
+                                          Are Able To Make A Successful
+                                               \033[1;34m(GET HTTP)\033[0m Request.
 
 
-    # Default Settings
-    try:
-        with open(path[0]+"/settings.json") as json_file:
-            settings = load(json_file)
-    except FileNotFoundError:
-        if NotRaw: print(f"\n    {r}\"{p}{path[0]}/settings.json{r}\"{y} Was Not Found.{m0}\n")
-        else: print(f"{y}?{m0}")
-        raise SystemExit
+                \033[1;32mUsage:\033[0m
+                    
+                        python3 ProxyKot.py \033[1;33m[Options]
+                
+                \033[1;32mOptions:\033[0m
 
-    timeout = int(settings["timeout"])
-    test_server = settings["test_server"]
-    threads = int(settings["threads"])
+                        \033[1;33m--cpl \033[2;49;37m<FileName>\033[0m            Validate A List Of Proxies.
+                        \033[1;33m--cp \033[2;49;37m<Ip:Port>\033[0m              Validate A Singular Proxy.
+                        \033[1;33m--timeout \033[2;49;37m<Seconds>\033[0m         Set A Timeout Limit In Seconds.
+                        \033[1;33m-th \033[2;49;37m<Count>\033[0m                 Number Of Threads To Speed Up The Process.
+                
+                \033[1;32mFuture ProxyKot:\033[0m
 
-
-    # Help Text
-    try:
-        with open("HELP_TEXT.txt", 'r') as help_text_file:
-            HELP_TXT = help_text_file.read()
-            HELP_TXT = HELP_TXT.encode().decode("unicode_escape")
-    except FileNotFoundError:
-        if NotRaw: print(f"\n    {r}\"{p}{path[0]}/HELP_TEXT.txt{r}\"{y} Was Not Found.{m0}\n")
-        else: print(f"{y}?{m0}")
-        raise SystemExit
-
+                        This Is Only The First Release Of This Tool, In The Future This
+                        Tool Will Have More Options Such As Supporting \033[1;34mHTTPS\033[0m And Other.
+                        There Will Be An Optional Terminal UI, The Tool Itself Will Be
+                        Even Faster And More Efficient.\n\n"""
 
     # Checking Python Version
     if version_info.major != 3:
@@ -93,7 +108,7 @@ try:
             return "valid"
 
 
-    # Proxy Health
+    # Connecting With IP Function
     def is_available(Ip,PORT):
         try:
             TimeConnectStart = perf_counter()
@@ -169,10 +184,8 @@ try:
 
     # Ui
     if args == []:
-        if NotRaw: print(f"\n\n{r}You Did Not Enter An Internet Protocol Following the Port Proxy Address (<ip:port>). {m0}(Example: --cp 127.0.0.1)")
-        else: print(f"{y}?{m0}")
+        print("Ui")
         raise SystemExit
-
 
     # Extra Args Check
     for arg in args:
@@ -349,11 +362,11 @@ try:
                 raise SystemExit
             
             except FileNotFoundError: 
-                if NotRaw: print(f"\n    {r}\"{p}{proxy_list_file_arg}{r}\"{y} Doesn't Exist.{m0}\n")
+                if NotRaw: print(f"\n    {r}\"{p}{path[0]}/{proxy_list_file_arg}{r}\"{y} Doesn't Exist.{m0}\n")
                 else: print(f"{y}?{m0}")
                 raise SystemExit
-
+            
 
 except SystemExit:None
-except (SystemExit, KeyboardInterrupt):print(f"\n{r}Goodbye!.{m0}") if NotRaw else None
+except (SystemExit, KeyboardInterrupt):print(f"\n{r}Goodbye!.{m0}")
 except:print("        \033[1;31m==[ERROR]==\033[0m");import traceback;traceback.print_exc()
