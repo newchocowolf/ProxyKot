@@ -6,7 +6,7 @@
 - `python3 ProxyKot.py [Options]`
 - `python3 ProxyKot.py --help`
 # *Example Of `--cpl`*
-![](https://github.com/the-computer-mayor/ProxyKot/blob/main/cpl.gif?raw=true)
+![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/cpl.gif?raw=true)
 # Features
 - Changing Threading Limit **`Default Is 4`**
 - Changing Timeout Limit **`Default Is 3`**
@@ -21,4 +21,4 @@ Tool Will Have More Options Such As Supporting HTTPS And Other.
 There Will Be An Optional Terminal UI, The Tool Itself Will Be
 Even Faster And More Efficient.\*
 
-![](https://github.com/the-computer-mayor/ProxyKot/blob/main/image.png?raw=true)
+![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/image.png?raw=true)
