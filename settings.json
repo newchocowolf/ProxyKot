@@ -1,8 +1,0 @@
-
-{
-    "threads": 4,
-
-    "test_server": "http://ident.me", 
-
-    "timeout": 3
-}
