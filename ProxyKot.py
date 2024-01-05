@@ -66,7 +66,6 @@ try:
     if version_info.major != 3:
         print(f"\n    {y}Python3 Required!{m0}\n")
         raise SystemExit
-    
 
 
     # Checking IP Validation Function
