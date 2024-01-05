@@ -66,6 +66,7 @@ try:
     if version_info.major != 3:
         print(f"\n    {y}Python3 Required!{m0}\n")
         raise SystemExit
+    
 
 
     # Checking IP Validation Function
@@ -150,31 +151,33 @@ try:
         print("Coming soon...")
         raise SystemExit
 
+    # Help
+    if "--help" in args or "help" in args:
+        print(HELP_TXT, end='')
+        raise SystemExit
 
     # Extra Args Check
     for arg in args:
-
-        # Help
-        if arg.lower() == "help" or arg.lower() == "--help":
-            print(HELP_TXT, end='')
-            raise SystemExit
     
         # Raw Output Only
-        elif arg.lower() == "--raw":
+        if arg.lower() == "--raw":
             NotRaw = False
-            args.remove(arg.lower())
         
         # HTTPS Only
         elif arg.lower() == "-https":
             Method = "https://"
             Method_text = "HTTPS"
-            args.remove(arg)
 
         # HTTP Only
         elif arg.lower() == "-http":
             Method = "http://"
             Method_text = "HTTP"
-            args.remove(arg)
+
+    for Value in ["-http", "-https", "--raw"]:
+        try:
+            args.remove(Value)
+        except ValueError:
+            pass
 
 
     # Args
