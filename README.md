@@ -1,24 +1,34 @@
-# *ProxyKot :)*
+# $${\color{whhite}ProxyKot}$$ $${\color{red}v1.8}$$
+
 `Discord: myleader`
 
-**A Useful Tool To Validate If A Proxy Or Multiple Are Able To Make A Successful `GET HTTP` Request.**
-# *Usage*
-- `python3 ProxyKot.py [Options]`
-- `python3 ProxyKot.py --help`
+**A Useful Tool To Validate Proxies For You To Use.**
+# *Requirements*
+- **Linux**
+   -  `sudo apt update -y && sudo apt upgrade -y`
+   -  `sudo apt install python3`
+   - `sudo apt install curl` **Probably Already Built-In.**
+
+- **Windows**
+   - **[Python3](www.python.org)**
+# *Installation*
+   - `curl http://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py`
+   - `python3 ProxyKot.py --help`
 # *Example Of `--cpl`*
 ![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/cpl.gif?raw=true)
-# Features
+# *Features*
 - Changing Threading Limit **`Default Is 4`**
 - Changing Timeout Limit **`Default Is 3`**
-- Raw Output Available
-- Validating A List Of Proxies
-- Validating A Singular Proxy
+- Supports HTTP & HTTPS
+- Raw **Aka Json** Output
+- Can Validate A List Of Proxies
+- Or A Singular Proxy ;)
 - No Additional Python Libraries Needed **`Only Regular Python3 Built-In Libraries`**
 - Very Easy To Use 
-# *Super Efficient & Fast Tool To Validate Proxies*
-\*This Is Only The First Release Of This Tool, In The Future This
-Tool Will Have More Options Such As Supporting HTTPS And Other.
-There Will Be An Optional Terminal UI, The Tool Itself Will Be
-Even Faster And More Efficient.\*
+# *They'll Be More Features* 
+**This Is Only The Second Release (v1.8).**
 
-![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/image.png?raw=true)
+**There Will Be A Terminal User Interface And A Proxy Finder & Generator, Maybe Star?**
+
+![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/ProxyKot1.8.png?raw=true)
+
