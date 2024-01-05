@@ -27,7 +27,7 @@ python3 ProxyKot.py --cpl test2.txt --timeout 1 -th 100 -http
 - Raw **Aka Json** Output
 - Can Validate A List Of Proxies
 - Or A Singular Proxy ;)
-- No Additional Python Libraries Needed **`Only Regular Python3 Built-In Libraries`**
+- No Additional Python Modules Needed **`Only Regular Python3 Built-In Modules`**
 - Very Easy To Use 
 # *They'll Be More Features* 
 **This Is Only The Second Release (v1.8).**
