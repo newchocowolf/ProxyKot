@@ -1,4 +1,4 @@
-![image](https://github.com/the-computer-mayor/ProxyKot/assets/85826547/922e4d64-5111-4c32-a804-0e62eef98a3f)# $${\color{whhite}ProxyKot}$$ $${\color{red}v1.8}$$
+# $${\color{whhite}ProxyKot}$$ $${\color{red}v1.8}$$
 
 `Discord: myleader`
 
