@@ -19,7 +19,7 @@
 ```console
 python3 ProxyKot.py --cpl test2.txt --timeout 1 -th 100 -http
 ```
-![](http://github.com/the-computer-mayor/computer-mayor-db/blob/main/cpl1.8.gif?raw=true)
+![](http://github.com/the-computer-mayor/computer-mayor-db/blob/main/cplv1.8.gif?raw=true)
 # *Features*
 - Changing Threading Limit **`Default Is 4`**
 - Changing Timeout Limit **`Default Is 3`**
