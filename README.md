@@ -12,7 +12,7 @@
 - **Windows**
    - **[Python3](www.python.org)**
 # *Installation*
-   - `curl http://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py`
+   - `curl http://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py > ProxyKot.py`
    - `python3 ProxyKot.py --help`
 # *Example Of `--cpl`*
 **400 Proxies Checked In Less Than 4 Seconds Using `--timeout 1 -th 100`**  
