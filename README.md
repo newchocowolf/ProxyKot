@@ -10,7 +10,7 @@
    - `sudo apt install curl` **Probably Already Built-In.**
 
 - **Windows**
-   - **[Python3](http://www.python.org)**
+   - **[Python3](https://www.python.org)**
 # *Installation*
    - `curl http://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py > ProxyKot.py`
    - `python3 ProxyKot.py --help`
