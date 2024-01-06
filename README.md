@@ -34,5 +34,5 @@ python3 ProxyKot.py --cpl test2.txt --timeout 1 -th 100 -http
 
 **There Will Be A Terminal User Interface And A Proxy Finder & Generator, Maybe Star?**
 
-![]([http://github.com/the-computer-mayor/computer-mayor-db/blob/main/ProxyKot1.8.png?raw=true](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/ProxyKotv1.8.png?raw=true)https://github.com/the-computer-mayor/computer-mayor-db/blob/main/ProxyKotv1.8.png?raw=true)
+![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/ProxyKotv1.8.png?raw=true)
 
