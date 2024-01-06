@@ -97,8 +97,8 @@ try:
 
     # Proxy Health
     def is_available(IpPort):
-        TimeConnectStart = perf_counter()
         Respond = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "-i", "--proxy", IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"], capture_output=True)
+        TimeConnectStart = perf_counter()
         Respond = (Respond.stderr + Respond.stdout).decode("utf-8")
         TimeConnectEnd = perf_counter()
 
