@@ -23,7 +23,7 @@ python3 ProxyKot.py --cpl test2.txt --timeout 1 -th 100 -http
 # *Features*
 - Changing Threading Limit **`Default Is 4`**
 - Changing Timeout Limit **`Default Is 3`**
-- Supports HTTP & HTTPS
+- Supports HTTP & HTTPS Proxies
 - Raw **Aka Json** Output
 - Can Validate A List Of Proxies
 - Or A Singular Proxy ;)
