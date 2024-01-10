@@ -4,13 +4,10 @@
 
 **A Useful Tool To Validate Proxies For You To Use.**
 # *Requirements*
-- **Linux**
-   -  `sudo apt update -y && sudo apt upgrade -y`
-   -  `sudo apt install python3`
-   - `sudo apt install curl` **Probably Already Built-In.**
-
-- **Windows**
-   - **[Python3](https://www.python.org)**
+-  `Linux`
+-  `sudo apt update -y && sudo apt upgrade -y`
+-  `sudo apt install python3`
+-  `sudo apt install curl` **Probably Already Built-In.**
 # *Installation*
    - `curl http://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py > ProxyKot.py`
    - `python3 ProxyKot.py --help`
