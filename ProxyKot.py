@@ -48,7 +48,7 @@ try:
 
     # Other
     Method_text, CH_arg, All_threads, NotRaw, NextPass = "HTTP", '', 0, True, False
-    
+
 
     # Print Function
     def Print(type='t', text='', End='\n'):
@@ -67,7 +67,6 @@ try:
         print(f"\n    {y}Python3 Required!{m0}\n")
         raise SystemExit
     
-
 
     # Checking IP Validation Function
     def is_valid(ip_port):
@@ -160,7 +159,7 @@ try:
 
         finally:
             All_threads += 1
-            
+
 
     # Ui
     if args == []:
@@ -174,11 +173,11 @@ try:
 
     # Extra Args Check
     for arg in args:
-    
+
         # Raw Output Only
         if arg.lower() == "--raw":
             NotRaw = False
-        
+
         # HTTPS Only
         elif arg.lower() == "-https":
             Method = "https://"
@@ -205,12 +204,12 @@ try:
             if C_arg == "--timeout":
                 timeout = int(args[arg+1])+1
                 NextPass = True
-                
+
             # Threads Limit
             elif C_arg == "-th":
                 threads = int(args[arg+1])
                 NextPass = True
-            
+
             # Main Args
             elif C_arg in ["--cp", "--cpl"]:
                 if CH_arg == '': 
@@ -224,7 +223,7 @@ try:
             else:
                 if NextPass == False: raise IndexError
                 NextPass = False
-            
+
 
         except (IndexError, ValueError):
             Print('?', f"\n    {y}You Might Need To Use {r}({p}python3 {basename(__file__)} --help{y}{r}){m0}\n"); raise SystemExit
