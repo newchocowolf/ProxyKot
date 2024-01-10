@@ -66,6 +66,7 @@ try:
     if version_info.major != 3:
         print(f"\n    {y}Python3 Required!{m0}\n")
         raise SystemExit
+    
 
 
     # Checking IP Validation Function
@@ -95,20 +96,36 @@ try:
             return "valid"
 
 
+    # Extract IP Function
+    def extractIP(IPPORT):
+        ip = ''
+        port = ''
+        IPORTFIG = False
+        for i in IPPORT:
+            if i == ':':
+                IPORTFIG = True
+            elif IPORTFIG == False:
+                ip = ip + i
+        return ip
+
+
     # Proxy Health
     def is_available(IpPort):
-        Respond = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "-i", "--proxy", IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"], capture_output=True)
+        JustIP = extractIP(IpPort)
+
         TimeConnectStart = perf_counter()
+        Respond = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "-i", "--proxy", IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"], capture_output=True)
         Respond = (Respond.stderr + Respond.stdout).decode("utf-8")
         TimeConnectEnd = perf_counter()
 
         if "timeout" in Respond:
+            print(Respond)
             return "timeout"
         
         elif "SSL certificate problem" in Respond:
             return False
         
-        elif "200 OK" in Respond:
+        elif JustIP in Respond:
             TimeConnect = TimeConnectEnd - TimeConnectStart
             return '{'+str(TimeConnect)+'ms}'
 
@@ -143,7 +160,7 @@ try:
 
         finally:
             All_threads += 1
-
+            
 
     # Ui
     if args == []:
@@ -186,7 +203,7 @@ try:
 
             # Timeout Limit
             if C_arg == "--timeout":
-                timeout = int(args[arg+1])
+                timeout = int(args[arg+1])+1
                 NextPass = True
                 
             # Threads Limit
