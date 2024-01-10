@@ -1,8 +1,10 @@
-# $${\color{whhite}ProxyKot}$$ $${\color{red}v1.8}$$
+# $${\color{white}ProxyKot}$$ $${\color{red}v1.8}$$
 
 `Discord: myleader`
 
 **A Useful Tool To Validate Proxies For You To Use.**
+# *Status*
+# $${\color{green}Working}$$
 # *Requirements*
 -  `Linux`
 -  `sudo apt update -y && sudo apt upgrade -y`
