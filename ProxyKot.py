@@ -118,7 +118,6 @@ try:
         TimeConnectEnd = perf_counter()
 
         if "timeout" in Respond:
-            print(Respond)
             return "timeout"
         
         elif "SSL certificate problem" in Respond:
