@@ -123,7 +123,7 @@ try:
         elif "SSL certificate problem" in Respond:
             return False
         
-        elif JustIP in Respond:
+        elif JustIP in Respond and "200 OK" in Respond:
             TimeConnect = TimeConnectEnd - TimeConnectStart
             return '{'+str(TimeConnect)+'ms}'
 
