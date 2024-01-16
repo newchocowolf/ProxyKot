@@ -11,7 +11,7 @@
 -  `sudo apt install curl` **Probably Already Built-In.**
 
 # *Installation*
-   - `curl http://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py > ProxyKot.py`
+   - `curl https://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py > ProxyKot.py`
    - `python3 ProxyKot.py --help`
 # *Example Of `--fps`*
 **Finding Lots Of High Speed Working Proxies Across The Internet In Few Seconds**  
