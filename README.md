@@ -20,12 +20,12 @@ python3 ProxyKot.py --fps http --timeout 1 --th 200 -owp
 ```
 ![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/fps_v2.gif?raw=true)
 # *Features*
-- Threading To Speed Up The Process, (Default Value Is 4 Threads) --> `--th <Number Of Threads>`
-- Timeout Limit To Find Fast Proxies, (Default Value Is 3 Seconds) --> `--timeout <Seconds>`
+- Threading To Speed Up The Process, (Default Value Is 4 Threads) --> `--th <Number Of Threads>`.
+- Timeout Limit To Find Fast Proxies, (Default Value Is 3 Seconds) --> `--timeout <Seconds>`.
 - Supports `HTTP` `HTTPS` `SOCKS4` `SOCKS5` Proxies.
 - Raw Aka Json Output Available (`-raw`).
 - Can Find `HTTP` `HTTPS` `SOCKS4` `SOCKS5` Across The Internet --> `(Example: --fps HTTP)`.
-- Can Validate A Singular Proxy -> `--cp <IP:Port>`
+- Can Validate A Singular Proxy -> `--cp <IP:Port>`.
 - Can Validate A List Of Proxies ->`--cpl <FileName>`.
 - Can Validate A Singular Proxy Using A Specific Method `-https` `-https` `-socks4` `-socks5`.
 - No Additional Python Libraries Needed **`Only Regular Python3 Built-In Modules`**.
