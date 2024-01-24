@@ -1,9 +1,11 @@
 try:
     # Libraries
+    from os import name as OSNAME
     from time import perf_counter
     from sys import version_info
     from os.path import basename
     from random import shuffle
+    from sys import executable
     from random import choice
     from json import loads
     from os import getpid
@@ -12,60 +14,55 @@ try:
     import subprocess
     import threading
 
+    # Python Location
+    python = basename(executable)
 
     # Default Vars
     threads, test_server, timeout, Method, ProxyType, ProxyKot_Lists = 4, "ident.me", 3, "http://", "--proxy", "https://raw.githubusercontent.com/the-computer-mayor/computer-mayor-db/main/PKPL.json"
 
     # Colors
-    m0, r, g, y, b, p = "\033[0m", "\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m"
+    m0, r, g, y, b, p, bw = "\033[1;0;0m", "\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m", "\033[0;30;47m"
 
     # Lists
     args, removed_proxy_list_lines, WorkingProxies, All_threads_names, proxy_list, WorkingProxies_resolved, WorkingProxies_sorted, ExtraThreads = argv[1:], [], [], [], [], [], [], []
 
+    # Logo
+    Logo = f"""\n                                     {p}____                     {r} _  __     _
+{m0}                                    {p}|  __ \\                   {r}| |/ /    | |
+{m0}                                    {p}| |__) | __ _____  ___   _{r}| ' / ___ | |_
+{m0}                                    {p}|  ___/ '__/ _ \\ \\/ / | | {r}|  < / _ \\| __|{m0}            {g}Discord: myleader
+{m0}                                    {p}| |   | | | (_) >  <| |_| {r}| . \\ (_) | |_{m0}             {g}Github: the-computer-mayor
+{m0}                                    {p}|_|   |_|  \\___/_/\\_\\\\__, {r}|_|\\_\\___/ \\__|
+{m0}                                                        {p}__/ |
+{m0}                                                        {p}|___/{m0}\n"""
+
     # Help Text
-    HELP_TXT = f"""\n                                     \033[1;35m_____                    \033[1;31m _  __     _
-\033[0m                                    \033[1;35m|  __ \\                   \033[1;31m| |/ /    | |
-\033[0m                                    \033[1;35m| |__) | __ _____  ___   _\033[1;31m| ' / ___ | |_
-\033[0m                                    \033[1;35m|  ___/ '__/ _ \\ \\/ / | | \033[1;31m|  < / _ \\| __|\033[0m            \033[1;32mDiscord: myleader
-\033[0m                                    \033[1;35m| |   | | | (_) >  <| |_| \033[1;31m| . \\ (_) | |_\033[0m             \033[1;32mGithub: the-computer-mayor
-\033[0m                                    \033[1;35m|_|   |_|  \\___/_/\\_\\\\__, \033[1;31m|_|\\_\\___/ \\__|
-\033[0m                                                        \033[1;35m__/ |
-\033[0m                                                        \033[1;35m|___/\033[0m
-
-                                      \033[0mA CHECK & FIND PROXIES AND MUCH MORE!
-                                               \033[1;36m( HTTP || HTTPS )\033[0m
-                                                   \033[1;34m( v2.8 )\033[0m
-
-
-                \033[1;32mUsage:\033[0m
-                        python3 {basename(__file__)} \033[1;33m[Options]\033[0m
-
-
-                \033[1;32mMain Options:\033[0m
-
-                        \033[1;33m--fps\033[0m \033[2;49;37m<ProxyType>\033[0m           Find \033[1;36mHTTP\033[0m Or \033[1;36mHTTPS\033[0m Or \033[1;36mSOCKS4\033[0m Or \033[1;36mSOCKS5\033[0m Working Proxies.
-                                                    (Example: --fps HTTP)
-
-                        \033[1;33m--cpl\033[0m \033[2;49;37m<FileName>\033[0m            Validate A List Of Proxies.
-                        \033[1;33m--cp\033[0m \033[2;49;37m<IP:Port>\033[0m              Validate A Singular Proxy.
-                        \033[1;33m--timeout\033[0m \033[2;49;37m<Seconds>\033[0m         Set A Timeout In Seconds.
-
-                        \033[1;33m--th\033[0m \033[2;49;37m<Count>\033[0m                Number Of Threads To Speed Up The Process.
-                                                    \033[1;31m(Too Much Can Cause An Error & Terminating The Process)\033[0m
-
-
-                \033[1;32mAdditional Options:\033[0m
-
-                        \033[1;33m-http\033[0m                       Use Only \033[1;36mHTTP\033[0m.
-                        \033[1;33m-https\033[0m                      Use Only \033[1;36mHTTPS\033[0m.
-                        \033[1;33m-socks4\033[0m                     Use Only \033[1;36mSOCKS4\033[0m.
-                        \033[1;33m-socks5\033[0m                     Use Only \033[1;36mSOCKS5\033[0m.
-                        \033[1;33m-owp\033[0m                        Prints Only Working Proxies.
-                        \033[1;33m-raw\033[0m                        Raw Aka Json Output.
-                        \033[1;33m-1\033[0m                          Get A Singular Working Proxy Then Terminate.\n\n"""
+    HELP_TXT = f"""{Logo}\n
+                                      {m0}A CHECK & FIND PROXIES AND MUCH MORE!
+                                      \033[1;36m( HTTP || HTTPS || SOCKS4 || SOCKS5 ){m0}
+                                                      \033[1;34m( v3 ){m0}\n\n
+                {g}Usage:{m0}
+                        {python} {basename(__file__)} {y}[Options]{m0}\n\n
+                {g}Main Options:{m0}\n
+                        {y}--fps{m0} \033[2;49;37m<ProxyType>{m0}           Find \033[1;36mHTTP{m0} Or \033[1;36mHTTPS{m0} Or \033[1;36mSOCKS4{m0} Or \033[1;36mSOCKS5{m0} Working Proxies.
+                                                    (Example: --fps HTTP)\n
+                        {y}--px{m0} \033[2;49;37m<Count>{m0}                Terminate After Printing A Specified Amount Of Working Proxies.
+                        {y}--cpl{m0} \033[2;49;37m<FileName>{m0}            Validate A List Of Proxies.
+                        {y}--cp{m0} \033[2;49;37m<IP:Port>{m0}              Validate A Singular Proxy.
+                        {y}--timeout{m0} \033[2;49;37m<Seconds>{m0}         Set A Timeout In Seconds.\n
+                        {y}--th{m0} \033[2;49;37m<Count>{m0}                Number Of Threads To Speed Up The Process.
+                                                    \033[1;31m(Too Much Can Cause An Error & Terminating The Process){m0}\n\n
+                {g}Additional Options:{m0}\n
+                        {y}-http{m0}                       Use Only \033[1;36mHTTP{m0}.
+                        {y}-https{m0}                      Use Only \033[1;36mHTTPS{m0}.
+                        {y}-socks4{m0}                     Use Only \033[1;36mSOCKS4{m0}.
+                        {y}-socks5{m0}                     Use Only \033[1;36mSOCKS5{m0}.
+                        {y}-owp{m0}                        Prints Only Working Proxies.
+                        {y}-raw{m0}                        Raw Aka Json Output.
+                        {y}-1{m0}                          Get A Singular Working Proxy Then Terminate.\n\n"""
 
     # Other
-    Method_text, CH_arg, Json, All_threads, cdp, rch, NotRaw, owp, NextPass, IsFile, Singed, Error, CutOff, fcb_add  = "HTTP", '', '', 0, 0, 0, True, True, False, False, False, False, False, False
+    Method_text, CH_arg, Json, All_threads, cdp, px, rch, NotRaw, owp, NextPass, IsFile, Singed, Error, CutOff, fcb_add  = "HTTP", '', '', 0, 0, 0, 0, True, True, False, False, False, False, False, False
 
 
     # Print Function
@@ -95,12 +92,6 @@ try:
     if version_info.major != 3:
         print(f"\n    {y}Python3 Required!{m0}\n")
         raise SystemExit
-
-
-    # Terminate Current Process
-    def Die():
-        pid = getpid()
-        system(f"kill {pid} > /dev/null; wait {pid} 2> /dev/null")
 
 
     # Checking IP Validation Function
@@ -144,20 +135,21 @@ try:
 
     # Proxy Health
     def is_available(IpPort):
-        JustIP = extractIP(IpPort)
+        if OSNAME == "nt":CMD = ["curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
+        else:["timeout", "-v", str(timeout)+'s', "curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
 
         TimeConnectStart = perf_counter()
-        Respond = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"], capture_output=True)
+        Respond = subprocess.run(CMD, capture_output=True)
         Respond = (Respond.stderr + Respond.stdout).decode("utf-8")
         TimeConnectEnd = perf_counter()
 
-        if "timeout" in Respond:
+        if "timeout" in Respond.lower():
             return "timeout"
 
         elif "SSL certificate problem" in Respond:
             return False
 
-        elif JustIP in Respond and "200 OK" in Respond:
+        elif "Content-Type: text/plain" in Respond and "200 OK" in Respond:
             TimeConnect = TimeConnectEnd - TimeConnectStart
             return '{'+str(TimeConnect)+'s}'
 
@@ -168,9 +160,7 @@ try:
     # Check Proxy List Function
     def cpl(IpsPorts):
         try:
-            global cdp
-            global All_threads
-            global WorkingProxies
+            global cdp, All_threads, WorkingProxies
 
             for IpPort in IpsPorts:
                 IsValid = is_valid(IpPort)
@@ -194,18 +184,14 @@ try:
                         cdp += 1
                         Print('+', f"        {g}[+] {m0}{IpPort}    {g}{IsAvailable}{m0}", "cdp",  IA=IpPort)
                         if CutOff == True:
-                            Die()
+                            pid = getpid()
+                            system(f"kill {pid} > /dev/null; wait {pid} 2> /dev/null")
         finally:
             All_threads += 1
 
 
-    # Ui
-    if args == []:
-        print(f"UI: Coming soon... (try: {y}python3 {basename(__file__)} --help{m0})")
-        raise SystemExit
-
     # Help
-    if "--help" in args or "help" in args:
+    if "--help" in args or "help" in args or args == []:
         print(HELP_TXT, end='')
         raise SystemExit
 
@@ -281,6 +267,11 @@ try:
                 NextPass = True
 
             # Threads Limit
+            elif C_arg == "--px":
+                px = int(args[arg+1])
+                NextPass = True
+
+            # Threads Limit
             elif C_arg == "--th":
                 threads = int(args[arg+1])
                 NextPass = True
@@ -301,7 +292,7 @@ try:
 
 
         except (IndexError, ValueError):
-            Print('?', f"\n    {y}You Might Need To Use {r}({p}python3 {basename(__file__)} --help{r}){m0}\n"); raise SystemExit
+            Print('?', f"\n    {y}You Might Need To Use {r}({p}{python} {basename(__file__)} --help{r}){m0}\n"); raise SystemExit
 
 
     # [-- Start --]
@@ -326,7 +317,8 @@ try:
                         ProxyType = "--socks5"
                         PD = "socks5"
 
-                    GetJson = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "--http1.1", ProxyKot_Lists,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: raw.githubusercontent.com", "-H", "Accept: */*"], capture_output=True)
+                    if OSNAME == "nt":GetJson = subprocess.run(["curl", "--http1.1", ProxyKot_Lists,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: raw.githubusercontent.com", "-H", "Accept: */*"], capture_output=True)
+                    else:GetJson = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "--http1.1", ProxyKot_Lists,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: raw.githubusercontent.com", "-H", "Accept: */*"], capture_output=True)
                     GetJson = (GetJson.stderr + GetJson.stdout).decode("utf-8")
 
                     if "200 OK" not in GetJson:
@@ -403,7 +395,8 @@ try:
                     Print(text=f"\n    {p}Looking for {b}{Method_text}{p} Proxies...{m0}\n")
                     shuffle(PKPL)
                     for link in PKPL:
-                        GetProxyList = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "--http1.1", link,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", "Accept: */*"], capture_output=True)
+                        if OSNAME == "nt":GetProxyList = subprocess.run(["curl", "--http1.1", link,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", "Accept: */*"], capture_output=True)
+                        else:GetProxyList = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "--http1.1", link,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", "Accept: */*"], capture_output=True)
                         GetProxyList = (GetProxyList.stderr + GetProxyList.stdout).decode("utf-8")
                         if "200 OK" not in GetProxyList:    
                             list_status = True
@@ -424,7 +417,7 @@ try:
                         T = threading.Thread(target=cpl, args=[[proxy]])
                         T.daemon = True
                         T.start()
-                    Print(text=f"\n    {p}Checking Proxies List Using {b}{Method_text}{p} Method{m0}\n")
+                    Print(text=f"\n    {p}Validating A List Of Proxies Using {b}{Method_text}{p} Method{m0}\n")
                 else:
                     p_calc = len(proxy_list) / threads
                     if p_calc.is_integer() != True:
@@ -435,7 +428,7 @@ try:
                             p_calc = len(proxy_list) / threads
                     else:
                         Json = ''
-                    Print(text=f"\n    {p}Checking Proxies List Using {b}{Method_text}{p} Method{m0}\n{m0}")
+                    Print(text=f"\n    {p}Validating A List Of Proxies Using {b}{Method_text}{p} Method{m0}\n{m0}")
                     origin_p_calc = int(p_calc)
                     for making_thread in range(threads):
                         INPUT_ARG = proxy_list[int(rch):int(p_calc)]
@@ -448,7 +441,12 @@ try:
                         T = threading.Thread(target=cpl, args=[[Extra_Thread]])
                         T.daemon = True
                         T.start()
-                while All_threads != threads+len(ExtraThreads):None
+                while All_threads != threads+len(ExtraThreads):
+                    if px!=0:
+                        if px <= len(WorkingProxies):
+                            NotRaw = False
+                            break
+
                 for ProxyTimeT in WorkingProxies:
                     WorkingProxies_resolved.append(float(ProxyTimeT[list(ProxyTimeT)[0]]))
                 WorkingProxies_resolved.sort()
@@ -484,7 +482,7 @@ try:
                 raise SystemExit
 
 # Exit Handler
-except SystemExit:print(end=f'{m0}')
+except SystemExit:print(end='\033[0m')
 
 # Goodbye!,
 except (SystemExit, KeyboardInterrupt):Print(text="\n\033[1;31mGoodbye!.\033[0m")
