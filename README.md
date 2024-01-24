@@ -1,4 +1,4 @@
-# $${\color{white}ProxyKot}$$ $${\color{red}v2.8}$$
+# $${\color{white}ProxyKot}$$ $${\color{red}v3}$$
 `Discord: myleader`
 
 **FIND & CHECK PROXIES AND MUCH MORE!**
@@ -6,10 +6,11 @@
 # $${\color{green}Working}$$
 # *Requirements*
 -  `Linux`
--  `sudo apt update -y && sudo apt upgrade -y`
--  `sudo apt install python3`
--  `sudo apt install curl` **Probably Already Built-In.**
-
+   -  `sudo apt update -y && sudo apt upgrade -y`
+   -  `sudo apt install python3`
+   -  `sudo apt install curl` **Probably Already Built-In.**
+- `Windows`
+   - [`Python`](https://www.python.org/downloads)
 # *Installation*
    - `curl https://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py > ProxyKot.py`
    - `python3 ProxyKot.py --help`
@@ -31,10 +32,7 @@ python3 ProxyKot.py --fps http --timeout 1 --th 200 -owp
 - No Additional Python Libraries Needed **`Only Regular Python3 Built-In Modules`**.
 - Can Print Out Only Working Proxies By Adding `-owp`.
 - Can Terminate After Getting A Singular Working Proxy By Adding `-1`.
+- Can Terminate After Printing A Specified Amount Of Working Proxies Using `--px <Count>`
 - Very Easy To Use.
-# *They'll Be More Features* 
-**This Is Only V2.8, They'll Be More Features Available In This Tool**
-
-**If You Wanna Keep Up With This Helpful Proxy Tool, Maybe Star?..**
-
-![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/ProxyKot_v2.8.png?raw=true)
+# ***Maybe Star?***
+![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/ProxyKotV3.png?raw=true)
