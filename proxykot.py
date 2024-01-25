@@ -446,10 +446,10 @@ try:
                         T.start()
                 while All_threads != threads+len(ExtraThreads):
                     if px!=0:
-                        if px <= len(WorkingProxies):
+                        if len(WorkingProxies) >= px:
                             NotRaw = False
                             break
-
+                
                 for ProxyTimeT in WorkingProxies:
                     WorkingProxies_resolved.append(float(ProxyTimeT[list(ProxyTimeT)[0]]))
                 WorkingProxies_resolved.sort()
