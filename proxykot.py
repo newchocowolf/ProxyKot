@@ -136,7 +136,7 @@ try:
     # Proxy Health
     def is_available(IpPort):
         if OSNAME == "nt":CMD = ["curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
-        else:CMD = ["timeout", "-v", str(timeout)+'s', "curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
+        else:["timeout", "-v", str(timeout)+'s', "curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
 
         TimeConnectStart = perf_counter()
         Respond = subprocess.run(CMD, capture_output=True)
@@ -185,9 +185,12 @@ try:
                         Print('+', f"        {g}[+] {m0}{IpPort}    {g}{IsAvailable}{m0}", "cdp",  IA=IpPort)
                         if CutOff == True:
                             pid = getpid()
-                            system(f"kill {pid} > /dev/null")
+                            if OSNAME == "nt":
+                                system(f"taskkill /F /PID {pid}")
+                            else:
+                                system(f"kill {pid} > /dev/null; wait {pid} 2> /dev/null")
         finally:
-            All_threads += 1    
+            All_threads += 1
 
 
     # Help
