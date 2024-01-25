@@ -12,8 +12,8 @@
 - `Windows`
    - [`Python`](https://www.python.org/downloads)
 # *Installation*
-   - `curl https://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py > ProxyKot.py`
-   - `python3 ProxyKot.py --help`
+   - `curl https://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/ProxyKot.py > proxykot.py`
+   - `python3 proxykot.py --help`
 # *Example Of `--fps`*
 **Finding Lots Of High Speed Working Proxies Across The Internet In Few Seconds**  
 ```console
