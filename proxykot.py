@@ -186,7 +186,7 @@ try:
                         if CutOff == True:
                             pid = getpid()
                             if OSNAME == "nt":
-                                system(f"taskkill /F /PID {pid}")
+                                system(f"taskkill /F /PID {pid} > NUL")
                             else:
                                 system(f"kill {pid} > /dev/null")
         finally:
