@@ -188,7 +188,7 @@ try:
                             if OSNAME == "nt":
                                 system(f"taskkill /F /PID {pid}")
                             else:
-                                system(f"kill {pid} > /dev/null; wait {pid} 2> /dev/null")
+                                system(f"kill {pid} > /dev/null")
         finally:
             All_threads += 1
 
