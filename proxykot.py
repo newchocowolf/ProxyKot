@@ -21,7 +21,7 @@ try:
     threads, test_server, timeout, Method, ProxyType, ProxyKot_Lists = 4, "ident.me", 3, "http://", "--proxy", "https://raw.githubusercontent.com/the-computer-mayor/computer-mayor-db/main/PKPL.json"
 
     # Colors
-    m0, r, g, y, b, p, bw = "\033[1;0;0m", "\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m", "\033[0;30;47m"
+    m0, r, g, y, b, p = "\033[1;0;0m", "\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m"
 
     # Lists
     args, removed_proxy_list_lines, WorkingProxies, All_threads_names, proxy_list, WorkingProxies_resolved, WorkingProxies_sorted, ExtraThreads = argv[1:], [], [], [], [], [], [], []
@@ -136,7 +136,7 @@ try:
     # Proxy Health
     def is_available(IpPort):
         if OSNAME == "nt":CMD = ["curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
-        else:["timeout", "-v", str(timeout)+'s', "curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
+        else:CMD = ["timeout", "-v", str(timeout)+'s', "curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
 
         TimeConnectStart = perf_counter()
         Respond = subprocess.run(CMD, capture_output=True)
