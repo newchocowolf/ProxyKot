@@ -18,7 +18,7 @@ try:
     python = basename(executable)
 
     # Default Vars
-    threads, test_server, timeout, Method, ProxyType, ProxyKot_Lists = 4, "ident.me", 3, "http://", "--proxy", "https://raw.githubusercontent.com/the-computer-mayor/computer-mayor-db/main/PKPL.json"
+    threads, test_server, timeout, Method, ProxyType, ProxyKot_Lists = 4, "ipinfo.io", 3, "http://", "--proxy", "https://raw.githubusercontent.com/the-computer-mayor/computer-mayor-db/main/PKPL.json"
 
     # Colors
     m0, r, g, y, b, p = "\033[1;0;0m", "\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m"
@@ -62,7 +62,7 @@ try:
                         {y}-1{m0}                          Get A Singular Working Proxy Then Terminate.\n\n"""
 
     # Other
-    Method_text, CH_arg, Json, All_threads, cdp, px, rch, NotRaw, owp, NextPass, IsFile, Singed, Error, CutOff, fcb_add  = "HTTP", '', '', 0, 0, 0, 0, True, True, False, False, False, False, False, False
+    Method_text, CH_arg, Json, extra_link, All_threads, cdp, px, rch, NotRaw, owp, NextPass, IsFile, Singed, Error, CutOff, fcb_add  = "HTTP", '', '', '', 0, 0, 0, 0, True, True, False, False, False, False, False, False
 
 
     # Print Function
@@ -91,7 +91,7 @@ try:
     # Checking Python Version
     if version_info.major != 3:
         print(f"\n    {y}Python3 Required!{m0}\n")
-        raise SystemExit
+        raise SystemExit    
 
 
     # Checking IP Validation Function
@@ -135,22 +135,23 @@ try:
 
     # Proxy Health
     def is_available(IpPort):
-        if OSNAME == "nt":CMD = ["curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
-        else:CMD = ["timeout", "-v", str(timeout)+'s', "curl", "-i", ProxyType, IpPort, Method+test_server, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
-
+        if OSNAME == "nt":CMD = ["curl", "-i", ProxyType, IpPort, Method+test_server+extra_link, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
+        else:CMD = ["timeout", "-v", str(timeout)+'s', "curl", "-i", ProxyType, IpPort, Method+test_server+extra_link, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
         TimeConnectStart = perf_counter()
         Respond = subprocess.run(CMD, capture_output=True)
         Respond = (Respond.stderr + Respond.stdout).decode("utf-8")
         TimeConnectEnd = perf_counter()
 
 
-        if "timeout" in Respond.lower() or "timed out" in Respond:
+        if "timeout" in Respond.lower() or "timed out" in Respond.lower():
             return "timeout"
 
-        elif "certificate chain was issued" in Respond:
-            return False
-
-        elif "Content-Type: text/plain" in Respond and "200 OK" in Respond:
+        elif Method == "http://" and "content-type: application/json" in Respond.lower() and "200 OK" in Respond:
+            print(Respond)
+            TimeConnect = TimeConnectEnd - TimeConnectStart
+            return '{'+str(TimeConnect)+'s}'
+        
+        elif Method == "https://" and "CONNECTION HAS REACHED (the-computer-mayor)" in Respond:
             TimeConnect = TimeConnectEnd - TimeConnectStart
             return '{'+str(TimeConnect)+'s}'
 
@@ -218,7 +219,10 @@ try:
         elif arg == "-https":
             if Singed == False:
                 Method = "https://"
+                test_server = "raw.githubusercontent.com"
+                extra_link = "/the-computer-mayor/computer-mayor-db/main/chr"
                 Method_text = "HTTPS"
+
             else:
                 Error = True
             Signed = True
@@ -314,6 +318,9 @@ try:
                     if args[arg_sect+1].lower() in ["http", "https"]:
                         PD = "http&https"
                         Method = f"{args[arg_sect+1].lower()}://"
+                        if args[arg_sect+1].lower() == "https":
+                            test_server = "raw.githubusercontent.com"
+                            extra_link = "/the-computer-mayor/computer-mayor-db/main/chr"
                     elif args[arg_sect+1].lower() == "socks4":
                         ProxyType = "--socks4"
                         PD = "socks4"
