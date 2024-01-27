@@ -147,6 +147,9 @@ try:
         if "timeout" in Respond.lower() or "timed out" in Respond:
             return "timeout"
 
+        elif "certificate chain was issued" in Respond:
+            return False
+
         elif "Content-Type: text/plain" in Respond and "200 OK" in Respond:
             TimeConnect = TimeConnectEnd - TimeConnectStart
             return '{'+str(TimeConnect)+'s}'
