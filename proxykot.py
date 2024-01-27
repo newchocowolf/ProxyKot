@@ -143,11 +143,9 @@ try:
         Respond = (Respond.stderr + Respond.stdout).decode("utf-8")
         TimeConnectEnd = perf_counter()
 
-        if "timeout" in Respond.lower():
-            return "timeout"
 
-        elif "SSL certificate problem" in Respond:
-            return False
+        if "timeout" in Respond.lower() or "timed out" in Respond:
+            return "timeout"
 
         elif "Content-Type: text/plain" in Respond and "200 OK" in Respond:
             TimeConnect = TimeConnectEnd - TimeConnectStart
@@ -472,7 +470,7 @@ try:
                 elif NotRaw == False:
                     if len(WorkingProxies) == 0:
                         Print('-'); raise SystemExit
-                    print(WorkingProxies_sorted)
+                    print(str(WorkingProxies_sorted).replace("'", '"'))
                 elif NotRaw and owp == False:
                     print()
 
