@@ -14,17 +14,27 @@ try:
     import subprocess
     import threading
 
+
+
     # Python Location
     python = basename(executable)
+
+
 
     # Default Vars
     threads, test_server, timeout, Method, ProxyType, ProxyKot_Lists = 4, "ipinfo.io", 3, "http://", "--proxy", "https://raw.githubusercontent.com/the-computer-mayor/computer-mayor-db/main/PKPL.json"
 
+
+
     # Colors
     m0, r, g, y, b, p = "\033[1;0;0m", "\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m"
 
+
+
     # Lists
-    args, removed_proxy_list_lines, WorkingProxies, All_threads_names, proxy_list, WorkingProxies_resolved, WorkingProxies_sorted, ExtraThreads = argv[1:], [], [], [], [], [], [], []
+    args, removed_proxy_list_lines, WorkingProxies, proxy_list, WorkingProxies_resolved, WorkingProxies_sorted, ExtraThreads = argv[1:], [], [], [], [], [], [], []
+
+
 
     # Logo
     Logo = f"""\n                                     {p}____                     {r} _  __     _
@@ -61,8 +71,11 @@ try:
                         {y}-raw{m0}                        Raw Aka Json Output.
                         {y}-1{m0}                          Get A Singular Working Proxy Then Terminate.\n\n"""
 
+
+
     # Other
-    Method_text, CH_arg, Json, extra_link, All_threads, cdp, px, rch, NotRaw, owp, NextPass, IsFile, Singed, Error, CutOff, fcb_add  = "HTTP", '', '', '', 0, 0, 0, 0, True, True, False, False, False, False, False, False
+    Method_text, CH_arg, Json, extra_link, All_threads, cdp, px, rch, NotRaw, owp, NextPass, Singed, Error, CutOff, fcb_add  = "HTTP", '', '', '', 0, 0, 0, 0, True, True, False, False, False, False, False
+
 
 
     # Print Function
@@ -88,10 +101,12 @@ try:
                 print(f"{g}+{IA}{m0}")
 
 
+
     # Checking Python Version
     if version_info.major != 3:
         print(f"\n    {y}Python3 Required!{m0}\n")
         raise SystemExit    
+
 
 
     # Checking IP Validation Function
@@ -121,17 +136,6 @@ try:
             return "valid"
 
 
-    # Extract IP Function
-    def extractIP(IPPORT):
-        ip = ''
-        IPORTFIG = False
-        for i in IPPORT:
-            if i == ':':
-                IPORTFIG = True
-            elif IPORTFIG == False:
-                ip = ip + i
-        return ip
-
 
     # Proxy Health
     def is_available(IpPort):
@@ -157,6 +161,7 @@ try:
 
         else:
             return False
+
 
 
     # Check Proxy List Function
@@ -193,6 +198,7 @@ try:
                                 system(f"kill {pid} > /dev/null")
         finally:
             All_threads += 1
+
 
 
     # Help
@@ -303,9 +309,11 @@ try:
             Print('?', f"\n    {y}You Might Need To Use {r}({p}{python} {basename(__file__)} --help{r}){m0}\n"); raise SystemExit
 
 
+
     # [-- Start --]
     for arg_sect in range(len(args)):
         arg = args[arg_sect].lower()
+
 
 
         # --fps
@@ -353,6 +361,7 @@ try:
                 raise SystemExit
 
 
+
         # --cp
         if arg == "--cp":
             Print(text=f"\n    {p}<ip:port>: {m0}",End='')
@@ -383,6 +392,7 @@ try:
                 raise SystemExit
 
 
+
         # --cpl & --fps
         elif arg == "--cpl":
 
@@ -402,6 +412,7 @@ try:
                             removed_proxy_list_lines.append(proxy_list[line])
                     for n_line in removed_proxy_list_lines:
                         proxy_list.remove(n_line)
+
                 else:
                     Print(text=f"\n    {p}Looking for {b}{Method_text}{p} Proxies...{m0}\n")
                     shuffle(PKPL)
@@ -423,6 +434,7 @@ try:
                                     proxy_list.append(pll)
                             break
 
+
                 if threads >= len(proxy_list):
                     for proxy in proxy_list:
                         T = threading.Thread(target=cpl, args=[[proxy]])
@@ -431,6 +443,7 @@ try:
                     Print(text=f"\n    {p}Validating A List Of Proxies Using {b}{Method_text}{p} Method{m0}\n")
                 else:
                     p_calc = len(proxy_list) / threads
+
                     if p_calc.is_integer() != True:
                         while p_calc.is_integer() != True:
                             Rproxy = choice(proxy_list)
@@ -439,6 +452,7 @@ try:
                             p_calc = len(proxy_list) / threads
                     else:
                         Json = ''
+
                     Print(text=f"\n    {p}Validating A List Of Proxies Using {b}{Method_text}{p} Method{m0}\n{m0}")
                     origin_p_calc = int(p_calc)
                     for making_thread in range(threads):
@@ -457,10 +471,11 @@ try:
                         if len(WorkingProxies) >= px:
                             NotRaw = False
                             break
-                
+
                 for ProxyTimeT in WorkingProxies:
                     WorkingProxies_resolved.append(float(ProxyTimeT[list(ProxyTimeT)[0]]))
                 WorkingProxies_resolved.sort()
+
                 for faster in WorkingProxies_resolved:
                     for Working_Proxy in WorkingProxies:
                         if faster == float(Working_Proxy[list(Working_Proxy)[0]]):
@@ -475,25 +490,35 @@ try:
                     for Working_proxy in WorkingProxies_sorted:
                         Print(text=' '*60+f"{g}XD{m0}\r"+' '*33+f"{g}{'{'+Working_proxy[list(Working_proxy)[0]]+'s}'}"+f"\r    {g}[+] {m0}{list(Working_proxy)[0]}")
                     Print(text='')
+
                 elif NotRaw and owp == False and len(WorkingProxies) == 0:
                     Print(text=f"    {r}No Working Proxies :({m0}\n")
+
                 elif NotRaw == False:
                     if len(WorkingProxies) == 0:
                         Print('-'); raise SystemExit
                     print(str(WorkingProxies_sorted).replace("'", '"'))
+
                 elif NotRaw and owp == False:
                     print()
+
 
             except IndexError:
                 Print('?', f"\n{r}    You Did Not Enter A File That Contains Proxies Addresses Following Their Ports.{m0} (Example: --cpl test_proxies.txt)\n")
                 raise SystemExit
 
+
             except FileNotFoundError:
                 Print('?', f"\n    {r}\"{p}{proxy_list_file_arg}{r}\"{y} Doesn't Exist.{m0}\n")
                 raise SystemExit
 
+
+
+
 # Exit Handler
 except SystemExit:print(end='\033[0m')
+
+
 
 # Goodbye!,
 except (SystemExit, KeyboardInterrupt):Print(text="\n\033[1;31mGoodbye!.\033[0m")
