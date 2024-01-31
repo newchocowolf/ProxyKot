@@ -12,6 +12,7 @@
 - `Windows`
    - [`Python`](https://www.python.org/downloads)
 # *Installation*
+Launch `CMD`/`Terminal` And Type In The Following Commands:
    - `curl https://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/proxykot.py -o proxykot.py`
    - `python3 proxykot.py --help`
 # *Example Of `--fps`*
