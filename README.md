@@ -11,7 +11,7 @@
    -  `sudo apt install curl` **Probably Already Built-In.**
 - `Windows`
    - [`Python`](https://www.python.org/downloads)
-# *Installation*
+# *Installation & Usage*
 Launch `CMD`/`Terminal` And Type In The Following Commands:
    - `curl https://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/proxykot.py -o proxykot.py`
    - `python3 proxykot.py --help`
