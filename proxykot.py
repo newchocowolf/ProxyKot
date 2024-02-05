@@ -32,7 +32,7 @@ try:
 
 
     # Lists
-    args, removed_proxy_list_lines, WorkingProxies, proxy_list, WorkingProxies_resolved, WorkingProxies_sorted, ExtraThreads = argv[1:], [], [], [], [], [], [], []
+    args, removed_proxy_list_lines, WorkingProxies, proxy_list, WorkingProxies_resolved, WorkingProxies_sorted, ExtraThreads = argv[1:], [], [], [], [], [], []
 
 
 
