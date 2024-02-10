@@ -1,18 +1,16 @@
 try:
     # Libraries
+    from sys import executable, argv, version_info
+    from random import shuffle, choice
+    from os import getpid, system
     from os import name as OSNAME
     from time import perf_counter
-    from sys import version_info
     from os.path import basename
-    from random import shuffle
-    from sys import executable
-    from random import choice
     from json import loads
-    from os import getpid
-    from os import system
-    from sys import argv
+    import multiprocessing
     import subprocess
     import threading
+    import traceback
 
 
 
@@ -22,7 +20,7 @@ try:
 
 
     # Default Vars
-    threads, test_server, timeout, Method, ProxyType, ProxyKot_Lists = 4, "ipinfo.io", 3, "http://", "--proxy", "https://raw.githubusercontent.com/the-computer-mayor/computer-mayor-db/main/PKPL.json"
+    threads, test_server, timeout, Method, ProxyType, ProxyKot_Lists = 4, "ident.me", 3, "http://", "--proxy", "https://raw.githubusercontent.com/the-computer-mayor/computer-mayor-db/main/PKPL.json"
 
 
 
@@ -48,9 +46,9 @@ try:
 
     # Help Text
     HELP_TXT = f"""{Logo}\n
-                                      {m0}A CHECK & FIND PROXIES AND MUCH MORE!
-                                      \033[1;36m( HTTP || HTTPS || SOCKS4 || SOCKS5 ){m0}
-                                                      \033[1;34m( v3 ){m0}\n\n
+                                    {m0}A CHECK & FIND PROXIES AND MUCH MORE!
+                                    \033[1;36m( HTTP || HTTPS || SOCKS4 || SOCKS5 ){m0}
+                                                    \033[1;34m( v3 ){m0}\n\n
                 {g}Usage:{m0}
                         {python} {basename(__file__)} {y}[Options]{m0}\n\n
                 {g}Main Options:{m0}\n
@@ -74,7 +72,7 @@ try:
 
 
     # Other
-    Method_text, CH_arg, Json, extra_link, All_threads, cdp, px, rch, NotRaw, owp, NextPass, Singed, Error, CutOff, fcb_add  = "HTTP", '', '', '', 0, 0, 0, 0, True, True, False, False, False, False, False
+    Method_text, CH_arg, Json, extra_link, All_threads, cdp, px, rch, owp, NotRaw, NextPass, Singed, Error, CutOff, fcb_add  = "HTTP", '', '', "/json", 0, 0, 0, 0, True, True, False, False, False, False, False
 
 
 
@@ -151,16 +149,73 @@ try:
             return "timeout"
 
         elif Method == "http://" and "content-type: application/json" in Respond.lower() and "200 OK" in Respond:
-            print(Respond)
             TimeConnect = TimeConnectEnd - TimeConnectStart
             return '{'+str(TimeConnect)+'s}'
-        
+
         elif Method == "https://" and "CONNECTION HAS REACHED (the-computer-mayor)" in Respond:
             TimeConnect = TimeConnectEnd - TimeConnectStart
             return '{'+str(TimeConnect)+'s}'
 
         else:
             return False
+
+
+
+    # Check Proxy Function
+    def CheckProxy(IP_Port, TIMEOUT=3, proxy_type="http", SSL=False):
+        global timeout, Method, ProxyType
+        proxy_type = proxy_type.lower()
+        timeout = int(TIMEOUT)
+        if proxy_type in "http":
+            ProxyType = "--proxy"
+        elif proxy_type in "https":
+            ProxyType = "--proxy"
+            Method = "https://"
+        elif proxy_type == "socks4":
+            ProxyType = "--socks4"
+        elif proxy_type == "socks5":
+            ProxyType = "--socks5"
+        else:
+            raise Exception("Invalid Input (proxy_type)")
+        if SSL == False:
+            Method = "http://"
+        elif SSL == True:
+            Method = "https://"
+        else:
+            raise Exception("Invalid Input (SSL)")
+
+        IsValid = is_valid(IP_Port)
+        if IsValid != "valid":
+            return IsValid
+        return is_available(IP_Port)
+
+
+
+    # Check Proxies List Function
+    def CheckProxyList(File, TIMEOUT=3, Threads=4, proxy_type="http"):
+        global timeout, Method, ProxyType
+        proxy_type = proxy_type.lower()
+        timeout = int(TIMEOUT)
+        if proxy_type == "http":
+            ProxyType = "-http"
+        elif proxy_type == "https":
+            ProxyType = "-https"
+        elif proxy_type == "socks4":
+            ProxyType = "-socks4"
+        elif proxy_type == "socks5":
+            ProxyType = "-socks5"
+        else:
+            raise Exception("Invalid Input (proxy_type)")
+
+        try:
+            file = open(File, 'r')
+            file.close()
+        except FileNotFoundError:
+            return "file_404"
+        except:
+            return traceback.print_exc()
+
+        return subprocess.run([python, basename(__file__), "--cpl", File, "--th", Threads, "--timeout", str(TIMEOUT), ProxyType, "-raw"])
 
 
 
@@ -182,7 +237,7 @@ try:
                     IsAvailable = is_available(IpPort)
                     if IsAvailable == "timeout":
                         cdp += 1
-                        if owp: Print('-?', f"        {r}[-] {m0}{IpPort}    {r}(Timed Out){m0}", "cdp")
+                        Print('-?', f"        {r}[-] {m0}{IpPort}    {r}(Timed Out){m0}", "cdp")
                     elif IsAvailable == False:
                         cdp += 1
                         Print('-?', f"        {r}[-] {m0}{IpPort}    {r}(Proxy Doesn't Work){m0}", "cdp")
@@ -202,7 +257,7 @@ try:
 
 
     # Help
-    if "--help" in args or "help" in args or args == []:
+    if "--help" in args or "help" in args or args == [] and __name__ == "__main__":
         print(HELP_TXT, end='')
         raise SystemExit
 
@@ -436,22 +491,20 @@ try:
 
 
                 if threads >= len(proxy_list):
+                    Print(text=f"\n    {p}Validating A List Of Proxies Using {b}{Method_text}{p} Method{m0}\n")
                     for proxy in proxy_list:
                         T = threading.Thread(target=cpl, args=[[proxy]])
                         T.daemon = True
                         T.start()
-                    Print(text=f"\n    {p}Validating A List Of Proxies Using {b}{Method_text}{p} Method{m0}\n")
+                        T.join()
                 else:
                     p_calc = len(proxy_list) / threads
 
-                    if p_calc.is_integer() != True:
-                        while p_calc.is_integer() != True:
-                            Rproxy = choice(proxy_list)
-                            ExtraThreads.append(Rproxy)
-                            proxy_list.remove(Rproxy)
-                            p_calc = len(proxy_list) / threads
-                    else:
-                        Json = ''
+                    while p_calc.is_integer() != True:
+                        Rproxy = choice(proxy_list)
+                        ExtraThreads.append(Rproxy)
+                        proxy_list.remove(Rproxy)
+                        p_calc = len(proxy_list) / threads
 
                     Print(text=f"\n    {p}Validating A List Of Proxies Using {b}{Method_text}{p} Method{m0}\n{m0}")
                     origin_p_calc = int(p_calc)
@@ -514,7 +567,6 @@ try:
 
 
 
-
 # Exit Handler
 except SystemExit:print(end='\033[0m')
 
@@ -522,4 +574,4 @@ except SystemExit:print(end='\033[0m')
 
 # Goodbye!,
 except (SystemExit, KeyboardInterrupt):Print(text="\n\033[1;31mGoodbye!.\033[0m")
-except:print("        \033[1;31m(x) ==== [ERROR] ==== (x)\033[0m\n");import traceback;traceback.print_exc()
+except:print("        \033[1;31m(x) ==== [ERROR] ==== (x)\033[0m\n");traceback.print_exc()
