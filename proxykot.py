@@ -7,7 +7,6 @@ try:
     from time import perf_counter
     from os.path import basename
     from json import loads
-    import multiprocessing
     import subprocess
     import threading
     import traceback
