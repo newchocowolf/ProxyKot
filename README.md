@@ -1,5 +1,6 @@
 # $${\color{white}ProxyKot}$$ $${\color{red}v3.8}$$
 `Discord: myleader`
+`Email: rito20rito@gmail.com`
 
 **FIND & CHECK PROXIES AND MUCH MORE!**
 # *Status*
@@ -35,14 +36,13 @@ python3 proxykot.py --fps http --timeout 1 --th 200 -owp
 - Can Terminate After Getting A Singular Working Proxy By Adding `-1`.
 - Can Terminate After Printing A Specified Amount Of Working Proxies Using `--px <Count>`
 - Very Easy To Use.
-# *Using ProxyKot To Your Python Code*
+# *Using ProxyKot In Your Python Code*
 ```python
 # Example Of Using ProxyKot In Your Code
 from proxykot import CheckProxy
-from proxykot import CheckProxyList
 
 
-print(CheckProxy(IP_Port="35.72.18680", TIMEOUT=3, proxy_type="SOCKS4", SSL=False))
+CheckProxy(IP_Port="35.72.18680", TIMEOUT=3, proxy_type="SOCKS4", SSL=False)
 # If The Proxy Is Working
 # output (string): {1.000880}
 #
@@ -51,15 +51,6 @@ print(CheckProxy(IP_Port="35.72.18680", TIMEOUT=3, proxy_type="SOCKS4", SSL=Fals
 #
 # If The Proxy Has Timed Out
 # output (string): timeout
-
-
-CheckProxyList(File="testFileName.txt", TIMEOUT=1, Threads=100, proxy_type="socks5")
-# If There Are Working Proxies
-# output (string): [{"213.19.205.18:54321": "0.4248947000014595"}, {"95.31.5.29:51528": "0.548758799995994"}]
-# You Can Convert It To Json Using: json.loads(output)
-#
-# If There Are No Working Proxies
-# output (string): -
 ```
 # ***Maybe Star?***
-![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/ProxyKotV3.png?raw=true)
+![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/ProxyKotv3.8.png?raw=true)
