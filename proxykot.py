@@ -34,7 +34,7 @@ try:
 
 
     # Logo
-    Logo = f"""\n                                     {p}____                     {r} _  __     _
+    Logo = f"""                                     {p}____                     {r} _  __     _
 {m0}                                    {p}|  __ \\                   {r}| |/ /    | |
 {m0}                                    {p}| |__) | __ _____  ___   _{r}| ' / ___ | |_
 {m0}                                    {p}|  ___/ '__/ _ \\ \\/ / | | {r}|  < / _ \\| __|{m0}            {g}Discord: myleader
@@ -47,7 +47,7 @@ try:
     HELP_TXT = f"""{Logo}\n
                                     {m0}A CHECK & FIND PROXIES AND MUCH MORE!
                                     \033[1;36m( HTTP || HTTPS || SOCKS4 || SOCKS5 ){m0}
-                                                    \033[1;34m( v3 ){m0}\n\n
+                                                  \033[1;34m( v3.8 ){m0}\n\n
                 {g}Usage:{m0}
                         {python} {basename(__file__)} {y}[Options]{m0}\n\n
                 {g}Main Options:{m0}\n
@@ -66,7 +66,7 @@ try:
                         {y}-socks5{m0}                     Use Only \033[1;36mSOCKS5{m0}.
                         {y}-owp{m0}                        Prints Only Working Proxies.
                         {y}-raw{m0}                        Raw Aka Json Output.
-                        {y}-1{m0}                          Get A Singular Working Proxy Then Terminate.\n\n"""
+                        {y}-1{m0}                          Get A Singular Working Proxy Then Terminate.\n"""
 
 
 
@@ -184,37 +184,8 @@ try:
             raise Exception("Invalid Input (SSL)")
 
         IsValid = is_valid(IP_Port)
-        if IsValid != "valid":
-            return IsValid
+        if IsValid != "valid": return IsValid
         return is_available(IP_Port)
-
-
-
-    # Check Proxies List Function
-    def CheckProxyList(File, TIMEOUT=3, Threads=4, proxy_type="http"):
-        global timeout, Method, ProxyType
-        proxy_type = proxy_type.lower()
-        timeout = int(TIMEOUT)
-        if proxy_type == "http":
-            ProxyType = "-http"
-        elif proxy_type == "https":
-            ProxyType = "-https"
-        elif proxy_type == "socks4":
-            ProxyType = "-socks4"
-        elif proxy_type == "socks5":
-            ProxyType = "-socks5"
-        else:
-            raise Exception("Invalid Input (proxy_type)")
-
-        try:
-            file = open(File, 'r')
-            file.close()
-        except FileNotFoundError:
-            return "file_404"
-        except:
-            return traceback.print_exc()
-
-        return subprocess.run([python, basename(__file__), "--cpl", File, "--th", Threads, "--timeout", str(TIMEOUT), ProxyType, "-raw"])
 
 
 
