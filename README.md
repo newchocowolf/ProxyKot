@@ -43,7 +43,7 @@ python3 proxykot.py --fps http --timeout 1 --th 200 -owp
 from proxykot import CheckProxy
 
 
-CheckProxy(IP_Port="35.72.18680", TIMEOUT=3, proxy_type="SOCKS4", SSL=False)
+CheckProxy(IP_Port="35.72.180", TIMEOUT=3, proxy_type="SOCKS4", SSL=False)
 # If The Proxy Is Working
 # output (string): {1.000880}
 #
