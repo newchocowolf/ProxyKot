@@ -50,7 +50,7 @@ CheckProxy(IP_Port="35.72.180", TIMEOUT=3, proxy_type="SOCKS4", SSL=False)
 # If The Proxy Isn't Working
 # output (bool): False
 #
-# If The Proxy Has Timed Out
+# If The Proxy Timed Out
 # output (string): timeout
 ```
 # ***Maybe Star?***
