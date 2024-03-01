@@ -11,7 +11,8 @@ For Windows & Linux, requires only `python` (version 3)
 - Timeout ☠
 - Supports `HTTP` `HTTPS` `SOCKS4` `SOCKS5` proxies ☠
 - Can validate a singular proxy ☠
-- Can validate a list of proxies ☠
+- Can validate a file containing list of proxies ☠
+- Can validate a link containing list of proxies ☠
 - No Additional Python Libraries Needed **`Only Regular Python3 Built-In Modules`** ☠
 - Print only working proxies feature ☠
 - Very Easy To Use ☠
