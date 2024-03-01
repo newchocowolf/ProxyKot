@@ -1,547 +1,542 @@
 try:
     # Libraries
-    from sys import executable, argv, version_info
-    from random import shuffle, choice
-    from os import getpid, system
-    from os import name as OSNAME
+    from urllib.parse import urlparse
     from time import perf_counter
-    from os.path import basename
+    from os.path import isfile
+    from random import choice
+    from string import digits
+    from typing import Union
     from json import loads
+    from sys import argv
     import subprocess
     import threading
-    import traceback
-
-
-
-    # Python Location
-    python = basename(executable)
-
-
-
-    # Default Vars
-    threads, test_server, timeout, Method, ProxyType, ProxyKot_Lists = 4, "ident.me", 3, "http://", "--proxy", "https://raw.githubusercontent.com/the-computer-mayor/computer-mayor-db/main/PKPL.json"
+    import re
 
 
 
     # Colors
-    m0, r, g, y, b, p = "\033[1;0;0m", "\033[1;31m", "\033[1;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m"
-
-
-
-    # Lists
-    args, removed_proxy_list_lines, WorkingProxies, proxy_list, WorkingProxies_resolved, WorkingProxies_sorted, ExtraThreads = argv[1:], [], [], [], [], [], []
-
+    m0, r, g, b, p = "\033[1;37m", "\033[1;31m", "\033[1;32m", "\033[1;34m", "\033[1;35m"
 
 
     # Logo
-    Logo = f"""                                     {p}____                     {r} _  __     _
-{m0}                                    {p}|  __ \\                   {r}| |/ /    | |
-{m0}                                    {p}| |__) | __ _____  ___   _{r}| ' / ___ | |_
-{m0}                                    {p}|  ___/ '__/ _ \\ \\/ / | | {r}|  < / _ \\| __|{m0}            {g}Discord: myleader
-{m0}                                    {p}| |   | | | (_) >  <| |_| {r}| . \\ (_) | |_{m0}             {g}Github: the-computer-mayor
-{m0}                                    {p}|_|   |_|  \\___/_/\\_\\\\__, {r}|_|\\_\\___/ \\__|
-{m0}                                                        {p}__/ |
-{m0}                                                        {p}|___/{m0}\n"""
+    logo = "\x1b[1;37m\n\t██████╗ ██████╗  ██████╗ ██╗  ██╗██╗   ██╗\x1b[1;31m██╗  ██╗ ██████╗ ████████╗\t\x1b[1;32mv4\x1b[1;37m\n\t██╔══██╗██╔══██╗██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝\x1b[1;31m██║ ██╔╝██╔═══██╗╚══██╔══╝\x1b[1;37m\n\t██████╔╝██████╔╝██║   ██║ ╚███╔╝  ╚████╔╝ \x1b[1;31m█████╔╝ ██║   ██║   ██║\t\x1b[1;32mDiscord: https://discord.com/users/1172063042666762252\x1b[1;37m\n\t██╔═══╝ ██╔══██╗██║   ██║ ██╔██╗   ╚██╔╝  \x1b[1;31m██╔═██╗ ██║   ██║   ██║\x1b[1;37m\n\t██║     ██║  ██║╚██████╔╝██╔╝ ██╗   ██║   \x1b[1;31m██║  ██╗╚██████╔╝   ██║\t\x1b[1;32mGithub: https://github.com/the-computer-mayor\x1b[1;37m\n\t╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   \x1b[1;31m╚═╝  ╚═╝ ╚═════╝    ╚═╝\n\x1b[1;37m"
 
-    # Help Text
-    HELP_TXT = f"""{Logo}\n
-                                    {m0}A CHECK & FIND PROXIES AND MUCH MORE!
-                                    \033[1;36m( HTTP || HTTPS || SOCKS4 || SOCKS5 ){m0}
-                                                  \033[1;34m( v3.8 ){m0}\n\n
-                {g}Usage:{m0}
-                        {python} {basename(__file__)} {y}[Options]{m0}\n\n
-                {g}Main Options:{m0}\n
-                        {y}--fps{m0} \033[2;49;37m<ProxyType>{m0}           Find \033[1;36mHTTP{m0} Or \033[1;36mHTTPS{m0} Or \033[1;36mSOCKS4{m0} Or \033[1;36mSOCKS5{m0} Working Proxies.
-                                                    (Example: --fps HTTP)\n
-                        {y}--px{m0} \033[2;49;37m<Count>{m0}                Terminate After Printing A Specified Amount Of Working Proxies.
-                        {y}--cpl{m0} \033[2;49;37m<FileName>{m0}            Validate A List Of Proxies.
-                        {y}--cp{m0} \033[2;49;37m<IP:Port>{m0}              Validate A Singular Proxy.
-                        {y}--timeout{m0} \033[2;49;37m<Seconds>{m0}         Set A Timeout In Seconds.\n
-                        {y}--th{m0} \033[2;49;37m<Count>{m0}                Number Of Threads To Speed Up The Process.
-                                                    \033[1;31m(Too Much Can Cause An Error & Terminating The Process){m0}\n\n
-                {g}Additional Options:{m0}\n
-                        {y}-http{m0}                       Use Only \033[1;36mHTTP{m0}.
-                        {y}-https{m0}                      Use Only \033[1;36mHTTPS{m0}.
-                        {y}-socks4{m0}                     Use Only \033[1;36mSOCKS4{m0}.
-                        {y}-socks5{m0}                     Use Only \033[1;36mSOCKS5{m0}.
-                        {y}-owp{m0}                        Prints Only Working Proxies.
-                        {y}-raw{m0}                        Raw Aka Json Output.
-                        {y}-1{m0}                          Get A Singular Working Proxy Then Terminate.\n"""
+
+    # Ops
+    ui_main = f"{logo}\n\tProxy List Path {p}(IP:Port, File Path, Link) {r}⇒{m0}  "
+    ui_proxy_type = f"{logo}\n\tProxy Type [HTTP, SOCKS4, SOCKS5] {r}⇒{m0}  "
+    ui_owp = f"{logo}\n\tPrint Only Working Proxies [Y,N] {r}⇒{m0}  "
+    ui_threads = f"{logo}\n\tNumber Of Threads {r}⇒{m0}  "
+    ui_domain_path = f"{logo}\n\tDomain Path {r}⇒{m0}  "
+    ui_filename = f"{logo}\n\tLog File Name {r}⇒{m0}  "
+    ui_timeout = f"{logo}\n\tTimeout {r}⇒{m0}  "
+    ui_domain = f"{logo}\n\tDomain {r}⇒{m0}  "
+    ui_ssl = f"{logo}\n\tSSL [Y,N] {r}⇒{m0}  "
+
+
+    # Standard Settings
+    in_proccess_threads = 0
+    all_threads = 0
+    threads = 10
+    timeout = 3
+
+    test_domain_path = ''
+    proxy_type = "http"
+    test_domain = ''
+
+    working_proxies = []
+    extra_threads = []
+
+    ssl = False
+    owp = False
 
 
 
-    # Other
-    Method_text, CH_arg, Json, extra_link, All_threads, cdp, px, rch, owp, NotRaw, NextPass, Singed, Error, CutOff, fcb_add  = "HTTP", '', '', "/json", 0, 0, 0, 0, True, True, False, False, False, False, False
+
+    # Clear Screen Function
+    def cls():
+        print("\x1B[2J\x1B[H")
 
 
 
-    # Print Function
-    def Print(type='t', text='', End='\n', IA=''):
-        if End == "cdp":
-            End=f"\r{b}x{cdp}x{m0}\n"
 
-        if type == "-?":
-            if NotRaw and owp:
-                print(text, end=End)
-
-        elif NotRaw:
-            print(text, end=End)
-
-        elif type == '?':
-            print(f"{y}?{m0}")
-
-        elif type == '-':
-            print(f"{r}-{m0}")
-
-        elif type == '+':
-            if CutOff:
-                print(f"{g}+{IA}{m0}")
+    # Using Curl Instead of requests :P
+    def curl(CMD:list):
+        output = subprocess.run(CMD, capture_output=True)
+        return (output.stderr + output.stdout).decode("utf-8", errors="ignore")
 
 
 
-    # Checking Python Version
-    if version_info.major != 3:
-        print(f"\n    {y}Python3 Required!{m0}\n")
-        raise SystemExit    
+
+    # Checking If The Domain Is Valid Function
+    def is_valid_domain(domain):
+        domain_pattern = re.compile(r'^(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.[A-Za-z]{2,})+$')
+        return bool(domain_pattern.match(domain))
 
 
 
-    # Checking IP Validation Function
-    def is_valid(ip_port):
-        Dot = 0
-        colon = 0
-        valid_chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':']
+
+    # Checking If (IP:Port) Is Valid Function
+    def is_valid_ip_port(ip_port):
+        IP, Dot, colon = '', 0, 0
+        valid_chars = list(digits+".:")
+
+
 
         for char in range(len(ip_port)):
             if ip_port[char] not in valid_chars:
                 return "invalid_proxy"
 
-            elif ip_port[char] == ':' or ip_port[char] == '.':
-                if ip_port[char] == '.': Dot += 1
-                elif ip_port[char] == ':': colon += 1
+            elif ip_port[char] in list(".:"):
+                if ip_port[char] == '.':
+                    Dot += 1
+
+                elif ip_port[char] == ':':
+                    IP = ip_port[:char]
+                    colon += 1
+
                 try:
                     _ = int(ip_port[char+1])
                     _ = int(ip_port[char-1])
                 except:
                     return "invalid_proxy"
 
-        if Dot == 3 and colon != 1:
-            return "no_port"
-        elif Dot != 3 or colon != 1:
+
+
+        if Dot == 3 and colon == 0 and len(IP)<=15 and len(IP)>7:
+            return "missing_port"
+
+        elif len(IP)>15 or len(IP)<7 or Dot != 3 or colon != 1:
             return "invalid_proxy"
+
         else:
             return "valid"
 
 
 
-    # Proxy Health
-    def is_available(IpPort):
-        if OSNAME == "nt":CMD = ["curl", "-i", ProxyType, IpPort, Method+test_server+extra_link, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
-        else:CMD = ["timeout", "-v", str(timeout)+'s', "curl", "-i", ProxyType, IpPort, Method+test_server+extra_link, "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: {test_server}", "-H", "Accept: */*"]
+
+    # Check Proxy Health Function
+    def check_proxy(
+            proxy_ip_port:str,
+            proxy_type = "HTTP",
+            timeout:int = 3,
+            ssl:bool = False,
+            test_domain:str = '',
+            test_domain_path:str = '',
+            required_keyword:str = '',
+            http_version:Union[int, float] = 1.1,
+            extra_curl_args:list = []
+        ):
+
+        validation = is_valid_ip_port(proxy_ip_port)
+        if validation != "valid": return ["invalid_input", validation, {"example": "1.1.1.1:80"}]
+
+
+
+        test_domain_path = test_domain_path.lower()
+        test_domain = test_domain.lower()
+        proxy_type = proxy_type.lower()
+
+
+
+        if proxy_type in ["http", "https"]:
+            proxy_type = "--proxy"
+
+        elif proxy_type in ["socks4", "socks5"]:
+            proxy_type = "--"+proxy_type
+
+        else:
+            return ["invalid_input", "invalid_proxy_type", {"available_input": ["HTTP", "HTTPS", "SOCKS4", "SOCKS5"]}]
+
+
+
+        if ssl: ssl = "https://"
+        else: ssl = "http://"
+
+
+
+
+        if http_version <= 1:
+            http_version = float(http_version)
+
+        if http_version not in [0.9, 1.1, 1.0, 2, 3]:
+            return ["invalid_input", "invalid_http_version", {"available_input": [0.9, 1.1, 1, 1.0, 2, 3]}]
+
+
+
+        if test_domain+test_domain_path+required_keyword == '':
+            required_keyword = "Content-Type: application/json"
+            test_domain = "ident.me"
+            test_domain_path = "/json"
+
+        elif test_domain_path[0] != '/':
+            return ["invalid_input", "invalid_domain_path", {"example": "/homepage"}]
+
+
+        if is_valid_domain(test_domain) == False:
+            return ["invalid_input", "invalid_domain", {"example":"example.com"}]
+
+
+
+        Command = [
+            "curl", "-i", "-G",
+            "--connect-time", str(timeout),
+            "--max-time", str(timeout),
+            "--url", ssl+test_domain+test_domain_path,
+            "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0",
+            "-H", f"Host: {test_domain}",
+            proxy_type, proxy_ip_port
+        ]
+        Command.extend(extra_curl_args)
+
+
+
         TimeConnectStart = perf_counter()
-        Respond = subprocess.run(CMD, capture_output=True)
-        Respond = (Respond.stderr + Respond.stdout).decode("utf-8")
+        output = subprocess.run(Command, capture_output=True)
         TimeConnectEnd = perf_counter()
 
+        output = (output.stderr + output.stdout).decode("utf-8", errors="ignore")
+        TimeConnect = TimeConnectEnd - TimeConnectStart
 
-        if "timeout" in Respond.lower() or "timed out" in Respond.lower():
-            return "timeout"
 
-        elif Method == "http://" and "content-type: application/json" in Respond.lower() and "200 OK" in Respond:
-            TimeConnect = TimeConnectEnd - TimeConnectStart
-            return '{'+str(TimeConnect)+'s}'
+        # Return
+        if any(keyword in output for keyword in ["Operation timed out", "Connection timed out"]):
+            return ["proxy_failed", "proxy_timeout", {"time_spent": TimeConnect}]
 
-        elif Method == "https://" and "CONNECTION HAS REACHED (the-computer-mayor)" in Respond:
-            TimeConnect = TimeConnectEnd - TimeConnectStart
-            return '{'+str(TimeConnect)+'s}'
+        elif any(keyword in output.lower() for keyword in ["http/2 200", "200 ok"]) and required_keyword.lower() in output.lower():
+            return ["proxy_succeeded", TimeConnect, output]
+
+        elif any(keyword in output for keyword in ["400 Bad Request", "409 Conflict", "Connection was reset"]):
+            return ["proxy_failed", "junk_proxy", {"time_spent": TimeConnect}]
+
+        elif "libcurl version doesn't support" in output:
+            return ["invalid_input", "http_version_unsupported", {"curl": f"curl: option --http{http_version}: the installed libcurl version doesn't support this"}]
+        
+        else:
+            return ["proxy_failed", "proxy_failed_transmitting_http_request", {"time_spent": TimeConnect}]
+
+
+
+
+    # Check Proxy Group Thread Function
+    def check_proxy_group(proxy_group:list, proxies_location_in_list:int):
+        global all_threads, working_proxies
+
+        for proxy in proxy_group:
+            cp = check_proxy(
+                proxy, ssl = ssl,
+                proxy_type = proxy_type,
+                timeout = timeout,
+                test_domain = test_domain,
+                test_domain_path = test_domain_path
+            )
+
+            if proxies_location_in_list == 6969696969:
+                proxies_location_in_list = "EXTRA_THREAD"
+
+
+
+            if cp[0] == "proxy_succeeded":
+                time_spent = str("{:.4f}".format(cp[1]))+"ms"
+
+                try:
+                    for x in range(len(cp[2])):
+                        if cp[2][x] == '{':
+                            output_json = loads(cp[2][x:])
+                    
+                    city = output_json["city"]
+                    country = output_json["country"]
+                    location_string = f"  {b+country} {p}({city}){m0}"
+                    log_file.write(f"{proxy} ☠ {proxy_type.upper()} ☠ {time_spent}\n")
+                    log_file.write(str(output_json))
+                    log_file.write("\n\n")
+
+                    if city == '': location_string = f"  {b+country+m0}"
+
+                    print('\n'+' '*44+f"{m0+'{'+g+time_spent+m0+'}'+location_string}\r"+' '*16+f"{g}[+]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
+                    working_proxies.append(proxy)
+
+                except KeyError:
+                    if owp == False: print('\n'+' '*44+f"{m0+'{'+r}Broken Proxy{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
+
+
+            elif cp[0] == "proxy_failed":
+                if cp[1] == "proxy_timeout":
+                    if owp == False: print('\n'+' '*44+f"{m0+'{'+r}Timed Out{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
+                
+                elif cp[1] == "junk_proxy":
+                    if owp == False: print('\n'+' '*44+f"{m0+'{'+r}Junk Proxy{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
+                
+                elif cp[1] == "proxy_failed_transmitting_http_request":
+                    if owp == False: print('\n'+' '*44+f"{m0+'{'+r}Broken Proxy{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
+
+
+            elif cp[0] == "invalid_input":
+                if len(proxy) > 15:
+                    proxy = (proxy[:13]+"..")
+
+                if cp[1] == "invalid_proxy":
+                    if owp == False: print('\n'+' '*44+f"{m0+'{'+r}Invalid Proxy{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
+
+                elif cp[1] == "missing_port":
+                    if owp == False: print('\n'+' '*44+f"{m0+'{'+r}No Port?{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
+
+
+
+            if proxies_location_in_list != "EXTRA_THREAD": proxies_location_in_list += 1
+        all_threads += 1
+
+
+
+
+    # Main Validating Proxies Function
+    def check_proxy_list(proxy_list:list, threads_count:int):
+        global extra_threads, in_proccess_threads
+
+
+
+        if threads_count > len(proxy_list) :
+            for thread in proxy_list:
+                check_proxy_group([thread], proxy_list.index(thread))
+
 
         else:
-            return False
+            while 1:
+                thread_proxy_count = len(proxy_list) / threads_count
+                if thread_proxy_count.is_integer():
+                    for thread in range(0, len(proxy_list), int(thread_proxy_count)):
+                        T = threading.Thread(target=check_proxy_group, args=[proxy_list[thread:thread+int(thread_proxy_count)], thread])
+                        T.daemon = True
+                        T.start()
+                        in_proccess_threads += 1
+                
+                    for extra_thread in extra_threads:
+                        T = threading.Thread(target=check_proxy_group, args=[[extra_thread], 6969696969])
+                        T.daemon = True
+                        T.start()
+                        in_proccess_threads += 1
+                    break
 
-
-
-    # Check Proxy Function
-    def CheckProxy(IP_Port, TIMEOUT=3, proxy_type="http", SSL=False):
-        global timeout, Method, ProxyType
-        proxy_type = proxy_type.lower()
-        timeout = int(TIMEOUT)
-        if proxy_type in "http":
-            ProxyType = "--proxy"
-        elif proxy_type in "https":
-            ProxyType = "--proxy"
-            Method = "https://"
-        elif proxy_type == "socks4":
-            ProxyType = "--socks4"
-        elif proxy_type == "socks5":
-            ProxyType = "--socks5"
-        else:
-            raise Exception("Invalid Input (proxy_type)")
-        if SSL == False:
-            Method = "http://"
-        elif SSL == True:
-            Method = "https://"
-        else:
-            raise Exception("Invalid Input (SSL)")
-
-        IsValid = is_valid(IP_Port)
-        if IsValid != "valid": return IsValid
-        return is_available(IP_Port)
-
-
-
-    # Check Proxy List Function
-    def cpl(IpsPorts):
-        try:
-            global cdp, All_threads, WorkingProxies
-
-            for IpPort in IpsPorts:
-                IsValid = is_valid(IpPort)
-
-                if IsValid == "invalid_proxy":
-                    cdp += 1
-                    Print('-?', f"        {r}[-] {m0}{IpPort}    {r}(Invalid Proxy){m0}", "cdp")
-                elif is_valid == "no_port":
-                    cdp += 1
-                    Print('-?', f"        {r}[-] {m0}{IpPort}    {r}(No Port?){m0}", "cdp")
                 else:
-                    IsAvailable = is_available(IpPort)
-                    if IsAvailable == "timeout":
-                        cdp += 1
-                        Print('-?', f"        {r}[-] {m0}{IpPort}    {r}(Timed Out){m0}", "cdp")
-                    elif IsAvailable == False:
-                        cdp += 1
-                        Print('-?', f"        {r}[-] {m0}{IpPort}    {r}(Proxy Doesn't Work){m0}", "cdp")
-                    else:
-                        WorkingProxies.append({IpPort:IsAvailable[1:-3]})
-                        cdp += 1
-                        Print('+', f"        {g}[+] {m0}{IpPort}    {g}{IsAvailable}{m0}", "cdp",  IA=IpPort)
-                        if CutOff == True:
-                            pid = getpid()
-                            if OSNAME == "nt":
-                                system(f"taskkill /F /PID {pid} > NUL")
-                            else:
-                                system(f"kill {pid} > /dev/null")
-        finally:
-            All_threads += 1
+                    extra_proxy = choice(proxy_list)
+                    extra_threads.append(extra_proxy)
+                    proxy_list.remove(extra_proxy)
 
 
-
-    # Help
-    if "--help" in args or "help" in args or args == [] and __name__ == "__main__":
-        print(HELP_TXT, end='')
-        raise SystemExit
-
-    # Extra Args Check
-    for arg in args:
-
-        # Raw Output Only
-        if arg == "-raw":
-            NotRaw = False
-
-        # Singular Working Proxy
-        if arg == "-1":
-            CutOff = True
-
-        # Singular Working Proxy
-        if arg == "-owp":
-            owp = False
-
-        # HTTPS Only
-        elif arg == "-https":
-            if Singed == False:
-                Method = "https://"
-                test_server = "raw.githubusercontent.com"
-                extra_link = "/the-computer-mayor/computer-mayor-db/main/chr"
-                Method_text = "HTTPS"
-
-            else:
-                Error = True
-            Signed = True
-
-        # HTTP Only
-        elif arg == "-http":
-            if Singed == False:
-                Method = "http://"
-                Method_text = "HTTP"
-            else:
-                Error = True
-            Signed = True
-
-        # SOCKS4 Only
-        elif arg == "-socks4":
-            if Singed == False:
-                ProxyType = "--socks4"
-                Method_text = "SOCKS4"
-            else:
-                Error = True
-            Signed = True
-
-        # SOCKS5 Only
-        elif arg == "-socks5":
-            if Singed == False:
-                ProxyType = "--socks5"
-                Method_text = "SOCKS5"
-            else:
-                Error = True
-            Signed = True
-
-
-    for Value in ["-http", "-https", "-raw", "-socks4", "-socks5", "-1", "-owp"]:
-        try:
-            args.remove(Value)
-        except ValueError:
-            pass
 
 
     # Args
-    for arg in range(len(args)):
-        try:
-            if Error:
-                raise IndexError
-            C_arg = args[arg].lower()
+    for arg in argv[1:]:
+        if arg.lower() == "domain":
+            while 1:
+                cls(); domain_input = str(input(ui_domain)).lower().replace(' ', '')
+                cls(); domain_path_input = str(input(ui_domain_path)).lower().replace(' ', '')
 
-            # Timeout Limit
-            if C_arg == "--timeout":
-                timeout = int(args[arg+1])+1
-                NextPass = True
 
-            # Threads Limit
-            elif C_arg == "--px":
-                px = int(args[arg+1])
-                NextPass = True
-
-            # Threads Limit
-            elif C_arg == "--th":
-                threads = int(args[arg+1])
-                NextPass = True
-
-            # Main Args
-            elif C_arg in ["--cp", "--cpl", "--fps"]:
-                if CH_arg == '': 
-                    CH_arg = C_arg
-                    NextPass = True
+                if is_valid_domain(domain_input) == False:
+                    cls(); input(f"{logo}\n\tInvalid Input, Try Again\n")
 
                 else:
-                    if NextPass == False: raise IndexError
-                    NextPass = False
+                    test_domain_path = '/'+domain_path_input
+                    test_domain = str(domain_input)
+                    break
 
+
+
+
+    # Main
+    while 1:
+        cls(); proxy_list_path = str(input(ui_main))
+        proxy_list_path_is_url = urlparse(proxy_list_path.replace(' ', ''))
+
+
+
+
+        if proxy_list_path_is_url.scheme and proxy_list_path_is_url.netloc:
+            cls(); print(f"{logo}\n\tRequesting {r+proxy_list_path+m0}")
+
+            request_proxy_list_command = [
+                "curl", "-i", "--http1.1", "-G",
+                "--url", proxy_list_path.replace(' ', ''),
+                "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0",
+                "-H", "Accept: */*"
+            ]
+
+            request = curl(request_proxy_list_command)
+
+
+            if "http/1.1 200 ok" in request.lower():
+                respond_lines = request.splitlines()[5:]
+                cls(); print(f"{logo}\n\t{g}Done{m0}")
+            
             else:
-                if NextPass == False: raise IndexError
-                NextPass = False
+                cls(); input(f"{logo}\n\tFailed To Connect To {r+proxy_list_path+m0}, Try Again\n")
+                continue
 
 
-        except (IndexError, ValueError):
-            Print('?', f"\n    {y}You Might Need To Use {r}({p}{python} {basename(__file__)} --help{r}){m0}\n"); raise SystemExit
-
-
-
-    # [-- Start --]
-    for arg_sect in range(len(args)):
-        arg = args[arg_sect].lower()
+            for line in range(len(respond_lines)):
+                if respond_lines[line] == '':
+                    proxy_list = respond_lines[line+1:]
 
 
 
-        # --fps
-        if arg == "--fps":
+        elif isfile(proxy_list_path):
+            proxy_list_file = open(proxy_list_path, 'r')
+            proxy_list = list(map(lambda s: s.strip(), proxy_list_file.readlines()))
+            proxy_list_file.close()
+
+
+
+        elif is_valid_ip_port(proxy_list_path) == "valid":
+            while 1:
+                try:
+                    cls(); timeout = int(input(ui_timeout))
+                except ValueError:
+                    cls(); input(f"{logo}\n\tInvalid Input, Try Again\n"); continue
+
+                cls(); proxy_type_input = input(ui_proxy_type)
+                if proxy_type_input.replace(' ', '').lower() in ["http", "https", "socks4", "socks5"]:
+                    proxy_type = proxy_type_input.replace(' ', '').lower()
+
+                cls(); ssl_input = input(ui_ssl)
+                if ssl_input.lower().replace(' ', '') in ["yes", 'y', "true"]:
+                    ssl = True
+
+                break
+
+
+            cls(); print(logo)
+
+            cp = check_proxy(
+                proxy_list_path,ssl=ssl,
+                proxy_type=proxy_type,
+                timeout=timeout,
+                test_domain=test_domain,
+                test_domain_path=test_domain_path
+            )
+
+
+
+            if cp[0] == "proxy_succeeded":
+                time_spent = str("{:.4f}".format(cp[1]))+"ms"
+
+                try:
+                    for x in range(len(cp[2])):
+                        if cp[2][x] == '{':
+                            output_json = loads(cp[2][x:])
+                    
+                    city = output_json["city"]
+                    country = output_json["country"]
+                    location_string = f"  {b+country} {p}({city}){m0}"
+                    if city == '': location_string = f"  {b+country+m0}"
+
+                    print(' '*44+f"{m0+'{'+g+time_spent+m0+'}'+location_string}\r"+' '*16+f"{g}[+]  {m0+proxy_list_path+b}\n")
+
+                except KeyError:
+                    print('\n'+' '*44+f"{m0+'{'+r}Broken Proxy{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy_list_path+b}\n")
+
+
+            elif cp[0] == "proxy_failed":
+                if cp[1] == "proxy_timeout":
+                    print(' '*44+f"{m0+'{'+r}Timed Out{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy_list_path+b}\n",)
+                
+                elif cp[1] == "junk_proxy":
+                    print(' '*44+f"{m0+'{'+r}Junk Proxy{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy_list_path+b}\n")
+                
+                elif cp[1] == "proxy_failed_transmitting_http_request":
+                    print(' '*44+f"{m0+'{'+r}Broken Proxy{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy_list_path+b}\n")
+
+
+            raise SystemExit
+
+
+
+        else:
+            cls(); input(f"{logo}\n\tInvalid Input, Try Again\n")
+            continue
+
+
+
+
+        while 1:
             try:
-                if args[arg_sect+1].lower() not in ["socks4", "socks5", "http", "https"]:
-                    Print('?', f"\n    {y}What Is {r}({p}{args[arg_sect+1]}{r}) {y}?{m0}\n"); raise SystemExit
+                cls(); timeout = int(input(ui_timeout))
+                if timeout <= 0:
+                    raise ValueError
+
+                cls(); threads = int(input(ui_threads))
+                if timeout <= 0:
+                    raise ValueError
+
+
+                cls(); proxy_type_input = input(ui_proxy_type)
+                if proxy_type_input.replace(' ', '').lower() in ["http", "https", "socks4", "socks5"]:
+                    proxy_type = proxy_type_input.replace(' ', '').lower()
+
+
+                cls(); ssl_input = input(ui_ssl)
+                if ssl_input.lower().replace(' ', '') in ["yes", 'y', "true"]:
+                    ssl = True
+                if ssl:
+                    ssl_show = f"{r}, {p}SSL{m0}"
                 else:
-                    Method_text = args[arg_sect+1].upper()
-                    if args[arg_sect+1].lower() in ["http", "https"]:
-                        PD = "http&https"
-                        Method = f"{args[arg_sect+1].lower()}://"
-                        if args[arg_sect+1].lower() == "https":
-                            test_server = "raw.githubusercontent.com"
-                            extra_link = "/the-computer-mayor/computer-mayor-db/main/chr"
-                    elif args[arg_sect+1].lower() == "socks4":
-                        ProxyType = "--socks4"
-                        PD = "socks4"
-                    elif args[arg_sect+1].lower() == "socks5":
-                        ProxyType = "--socks5"
-                        PD = "socks5"
+                    ssl_show = ''
+                
 
-                    if OSNAME == "nt":GetJson = subprocess.run(["curl", "--http1.1", ProxyKot_Lists,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: raw.githubusercontent.com", "-H", "Accept: */*"], capture_output=True)
-                    else:GetJson = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "--http1.1", ProxyKot_Lists,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", f"Host: raw.githubusercontent.com", "-H", "Accept: */*"], capture_output=True)
-                    GetJson = (GetJson.stderr + GetJson.stdout).decode("utf-8")
-
-                    if "200 OK" not in GetJson:
-                        Print('?', f"\n    {r}Request to ProxyKot Proxy Lists --> {p}({ProxyKot_Lists[8:]}){r} Failed.{m0}\n")
-                        raise SystemExit
-
-                    for fcb in GetJson:
-                        if fcb in ['{', '}']:
-                            if fcb_add == False:
-                                fcb_add = True
-                            else:
-                                fcb_add = False
-                            Json += fcb
-                        elif fcb_add == True:
-                            Json += fcb
-                    PKPL = loads(Json)[PD]
-                    arg = "--cpl"
-
-            except IndexError:
-                Print('?', f"\n    {r}You Did Not Enter A Proxy Type {p}(HTTP || HTTPS || SOCKS4 || SOCKS5){r}.{m0} (Example: --fps HTTP)\n")
-                raise SystemExit
+                cls(); owp_input = input(ui_owp)
+                if owp_input.lower().replace(' ', '') in ["yes", 'y', "true"]:
+                    owp = True
 
 
 
-        # --cp
-        if arg == "--cp":
-            Print(text=f"\n    {p}<ip:port>: {m0}",End='')
-            try:
-                proxy = args[arg_sect+1]
-                Print(text=g+proxy+m0)
-                valid_chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':']
-                Print(text=f"    {p}Valid: {m0}", End='')
-                IsValid = is_valid(proxy)
 
-                if IsValid == "invalid_proxy":
-                    Print('-', f"{r}Negative\n\nInvalid Proxy.{m0}"); raise SystemExit
-                elif IsValid == "no_port":
-                    Print('-', f"{r}Negative\n\nNo Port?{m0}"); raise SystemExit
-
-                Print(text=f"{g}Positive\n    {p}Method: {b}{Method_text}\n    {p}Available To Use: {m0}", End='')
-                IsAvailable = is_available(proxy)
-
-                if IsAvailable == False:
-                    Print('-', f"{r}Negative\n\n Proxy Doesn't Work :({m0}")
-                elif IsAvailable == "timeout":
-                    Print('-', f"{r}Negative\n\nProxy Connection Timed Out{m0}")
-                else:
-                    Print('+', text=f"{g}Positive {IsAvailable}{m0}\n", IA=proxy)
-
-            except IndexError:
-                Print('?', f"\n\n{r}You Did Not Enter An Internet Protocol Following the Port Proxy Address {p}(<ip:port>){r}.{m0} (Example: --cp 127.0.0.1:80)")
-                raise SystemExit
+            except ValueError:
+                cls(); input(f"{logo}\n\t{r}Invalid Input{m0}\n"); continue
 
 
 
-        # --cpl & --fps
-        elif arg == "--cpl":
 
             try:
-                if Json == '':
-                    proxy_list_file_arg = args[arg_sect+1]
-
-                    with open(proxy_list_file_arg, 'r') as proxy_list_file:
-                        proxy_list_uncorrected = proxy_list_file.readlines()
-
-                    proxy_list = list(map(lambda s: s.strip(), proxy_list_uncorrected))
-                    if proxy_list == []:
-                        Print('?', f"\n    {y}Empty{m0}\n"); raise SystemExit
-
-                    for line in range(len(proxy_list)):
-                        if proxy_list[line] in ['', ' ', '\n']:
-                            removed_proxy_list_lines.append(proxy_list[line])
-                    for n_line in removed_proxy_list_lines:
-                        proxy_list.remove(n_line)
-
-                else:
-                    Print(text=f"\n    {p}Looking for {b}{Method_text}{p} Proxies...{m0}\n")
-                    shuffle(PKPL)
-                    for link in PKPL:
-                        if OSNAME == "nt":GetProxyList = subprocess.run(["curl", "--http1.1", link,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", "Accept: */*"], capture_output=True)
-                        else:GetProxyList = subprocess.run(["timeout", "-v", str(timeout)+'s', "curl", "--http1.1", link,  "-i", "--connect-timeout", str(timeout), "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0", "-H", "Accept: */*"], capture_output=True)
-                        GetProxyList = (GetProxyList.stderr + GetProxyList.stdout).decode("utf-8")
-                        if "200 OK" not in GetProxyList:    
-                            list_status = True
-                            Print(text=f"    {r}[-] {b}{link}{r} Failed.{m0}")
-                        else:
-                            Print(text=f"    {g}[+] {b}{link}{g} Succeeded.{m0}\n")
-                            proxy_list_uncleaned = GetProxyList.splitlines()
-                            fcb_add = False
-                            for pll in proxy_list_uncleaned[5:]:
-                                if pll == '':
-                                    fcb_add = True
-                                elif fcb_add == True:
-                                    proxy_list.append(pll)
-                            break
+                cls(); file_name = input(ui_filename).replace(' ', '').lower()
+                log_file = open(file_name, 'w')
+                cls(); print(f"{logo}\n\t{p+proxy_type.upper()+r}, {p+str(threads)} Threads{r}, {p+str(timeout)}s Timeout{m0}{ssl_show}\n")
+                break
 
 
-                if threads >= len(proxy_list):
-                    Print(text=f"\n    {p}Validating A List Of Proxies Using {b}{Method_text}{p} Method{m0}\n")
-                    for proxy in proxy_list:
-                        T = threading.Thread(target=cpl, args=[[proxy]])
-                        T.daemon = True
-                        T.start()
-                        T.join()
-                else:
-                    p_calc = len(proxy_list) / threads
 
-                    while p_calc.is_integer() != True:
-                        Rproxy = choice(proxy_list)
-                        ExtraThreads.append(Rproxy)
-                        proxy_list.remove(Rproxy)
-                        p_calc = len(proxy_list) / threads
-
-                    Print(text=f"\n    {p}Validating A List Of Proxies Using {b}{Method_text}{p} Method{m0}\n{m0}")
-                    origin_p_calc = int(p_calc)
-                    for making_thread in range(threads):
-                        INPUT_ARG = proxy_list[int(rch):int(p_calc)]
-                        T = threading.Thread(target=cpl, args=[INPUT_ARG])
-                        T.daemon = True
-                        rch = rch + origin_p_calc
-                        p_calc = p_calc + origin_p_calc
-                        T.start()
-                    for Extra_Thread in ExtraThreads:
-                        T = threading.Thread(target=cpl, args=[[Extra_Thread]])
-                        T.daemon = True
-                        T.start()
-                while All_threads != threads+len(ExtraThreads):
-                    if px!=0:
-                        if len(WorkingProxies) >= px:
-                            NotRaw = False
-                            break
-
-                for ProxyTimeT in WorkingProxies:
-                    WorkingProxies_resolved.append(float(ProxyTimeT[list(ProxyTimeT)[0]]))
-                WorkingProxies_resolved.sort()
-
-                for faster in WorkingProxies_resolved:
-                    for Working_Proxy in WorkingProxies:
-                        if faster == float(Working_Proxy[list(Working_Proxy)[0]]):
-                            WorkingProxies_sorted.append(Working_Proxy)
-                            break
-                if NotRaw and owp == True:
-                    Print(text=f"\n\n    {b}(x){p} ==== Result ==== {b}(x){m0}\n")
-                    if len(WorkingProxies) == 0:
-                        Print(text=f"    {r}No Working Proxies :({m0}\n")
-                        raise SystemExit
-
-                    for Working_proxy in WorkingProxies_sorted:
-                        Print(text=' '*60+f"{g}XD{m0}\r"+' '*33+f"{g}{'{'+Working_proxy[list(Working_proxy)[0]]+'s}'}"+f"\r    {g}[+] {m0}{list(Working_proxy)[0]}")
-                    Print(text='')
-
-                elif NotRaw and owp == False and len(WorkingProxies) == 0:
-                    Print(text=f"    {r}No Working Proxies :({m0}\n")
-
-                elif NotRaw == False:
-                    if len(WorkingProxies) == 0:
-                        Print('-'); raise SystemExit
-                    print(str(WorkingProxies_sorted).replace("'", '"'))
-
-                elif NotRaw and owp == False:
-                    print()
+            except OSError:
+                cls(); input(f"{logo}\n\t{r}Invalid File Name{m0}\n"); continue
 
 
-            except IndexError:
-                Print('?', f"\n{r}    You Did Not Enter A File That Contains Proxies Addresses Following Their Ports.{m0} (Example: --cpl test_proxies.txt)\n")
-                raise SystemExit
 
 
-            except FileNotFoundError:
-                Print('?', f"\n    {r}\"{p}{proxy_list_file_arg}{r}\"{y} Doesn't Exist.{m0}\n")
+        check_proxy_list(proxy_list, threads_count=threads)
+
+        while 1:
+            if all_threads == in_proccess_threads:
+                print(f"\n{g}Done!.")
+                log_file.close()
                 raise SystemExit
 
 
 
-# Exit Handler
-except SystemExit:print(end='\033[0m')
+
+# Exit Handlers
+except SystemExit:
+    print('\033[0m', end='')
 
 
+except (SystemExit, KeyboardInterrupt):
+    try:
+        log_file.close()
+    
+    except NameError:
+        pass
 
-# Goodbye!,
-except (SystemExit, KeyboardInterrupt):Print(text="\n\033[1;31mGoodbye!.\033[0m")
-except:print("        \033[1;31m(x) ==== [ERROR] ==== (x)\033[0m\n");traceback.print_exc()
+    finally:
+        print("\n\033[1;31mGoodbye!.\033[0m")
+
+
+except:
+    from traceback import print_exc
+    print("\n\t\033[1;31m(x) ==== [ERROR] ==== (x)\033[0m\n");print_exc()
