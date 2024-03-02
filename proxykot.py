@@ -2,11 +2,11 @@ try:
     # Libraries
     from urllib.parse import urlparse
     from time import perf_counter
+    from json import loads, dumps
     from os.path import isfile
     from random import choice
     from string import digits
     from typing import Union
-    from json import loads
     from sys import argv
     import subprocess
     import threading
@@ -42,7 +42,9 @@ try:
 
     test_domain_path = ''
     proxy_type = "http"
+    ssl_show_file = ''
     test_domain = ''
+    ssl_show = ''
 
     working_proxies = []
     extra_threads = []
@@ -247,8 +249,8 @@ try:
                     city = output_json["city"]
                     country = output_json["country"]
                     location_string = f"  {b+country} {p}({city}){m0}"
-                    log_file.write(f"{proxy} ☠ {proxy_type.upper()} ☠ {time_spent}\n")
-                    log_file.write(str(output_json))
+                    log_file.write(f"{proxy} ☠ {proxy_type.upper()} ☠ {time_spent}{ssl_show_file}\n")
+                    log_file.write(dumps(output_json))
                     log_file.write("\n\n")
 
                     if city == '': location_string = f"  {b+country+m0}"
@@ -291,9 +293,12 @@ try:
 
     # Main Validating Proxies Function
     def check_proxy_list(proxy_list:list, threads_count:int):
-        global extra_threads, in_proccess_threads
+        global extra_threads, in_proccess_threads, ssl_show_file
 
 
+
+        if ssl_show != '':
+             ssl_show_file = " ☠ SSL"
 
         if threads_count > len(proxy_list) :
             for thread in proxy_list:
@@ -478,10 +483,9 @@ try:
                 if ssl_input.lower().replace(' ', '') in ["yes", 'y', "true"]:
                     ssl = True
                 if ssl:
-                    ssl_show = f"{r}, {p}SSL{m0}"
-                else:
-                    ssl_show = ''
-                
+                    ssl_show = f"{r} ☠  {p}SSL{m0}"
+
+
 
                 cls(); owp_input = input(ui_owp)
                 if owp_input.lower().replace(' ', '') in ["yes", 'y', "true"]:
@@ -499,7 +503,7 @@ try:
             try:
                 cls(); file_name = input(ui_filename).replace(' ', '').lower()
                 log_file = open(file_name, 'w')
-                cls(); print(f"{logo}\n\t{p+proxy_type.upper()+r}, {p+str(threads)} Threads{r}, {p+str(timeout)}s Timeout{m0}{ssl_show}\n")
+                cls(); print(f"{logo}\n\t{p+proxy_type.upper()+r} ☠  {p+str(threads)} Threads{r} ☠  {p+str(timeout)}s Timeout{m0}{ssl_show}\n")
                 break
 
 
