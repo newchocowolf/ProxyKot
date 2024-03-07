@@ -1,10 +1,10 @@
 try:
     # Libraries
+    from random import choice, shuffle
     from urllib.parse import urlparse
     from time import perf_counter
     from json import loads, dumps
     from os.path import isfile
-    from random import choice
     from string import digits
     from typing import Union
     from sys import argv
@@ -19,11 +19,12 @@ try:
 
 
     # Logo
-    logo = "\x1b[1;37m\n\t██████╗ ██████╗  ██████╗ ██╗  ██╗██╗   ██╗\x1b[1;31m██╗  ██╗ ██████╗ ████████╗\t\x1b[1;32mv4\x1b[1;37m\n\t██╔══██╗██╔══██╗██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝\x1b[1;31m██║ ██╔╝██╔═══██╗╚══██╔══╝\x1b[1;37m\n\t██████╔╝██████╔╝██║   ██║ ╚███╔╝  ╚████╔╝ \x1b[1;31m█████╔╝ ██║   ██║   ██║\t\x1b[1;32mDiscord: https://discord.com/users/1172063042666762252\x1b[1;37m\n\t██╔═══╝ ██╔══██╗██║   ██║ ██╔██╗   ╚██╔╝  \x1b[1;31m██╔═██╗ ██║   ██║   ██║\x1b[1;37m\n\t██║     ██║  ██║╚██████╔╝██╔╝ ██╗   ██║   \x1b[1;31m██║  ██╗╚██████╔╝   ██║\t\x1b[1;32mGithub: https://github.com/the-computer-mayor\x1b[1;37m\n\t╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   \x1b[1;31m╚═╝  ╚═╝ ╚═════╝    ╚═╝\n\x1b[1;37m"
+    logo = "\x1b[1;37m\n\t██████╗ ██████╗  ██████╗ ██╗  ██╗██╗   ██╗\x1b[1;31m██╗  ██╗ ██████╗ ████████╗\t\x1b[1;32mv4.8\x1b[1;37m\n\t██╔══██╗██╔══██╗██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝\x1b[1;31m██║ ██╔╝██╔═══██╗╚══██╔══╝\x1b[1;37m\n\t██████╔╝██████╔╝██║   ██║ ╚███╔╝  ╚████╔╝ \x1b[1;31m█████╔╝ ██║   ██║   ██║\t\x1b[1;32mDiscord: https://discord.com/users/1172063042666762252\x1b[1;37m\n\t██╔═══╝ ██╔══██╗██║   ██║ ██╔██╗   ╚██╔╝  \x1b[1;31m██╔═██╗ ██║   ██║   ██║\x1b[1;37m\n\t██║     ██║  ██║╚██████╔╝██╔╝ ██╗   ██║   \x1b[1;31m██║  ██╗╚██████╔╝   ██║\t\x1b[1;32mGithub: https://github.com/the-computer-mayor\x1b[1;37m\n\t╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   \x1b[1;31m╚═╝  ╚═╝ ╚═════╝    ╚═╝\n\x1b[1;37m"
 
 
     # Ops
-    ui_main = f"{logo}\n\tProxy List Path {p}(IP:Port, File Path, Link) {r}⇒{m0}  "
+    ui_request_list = f"{logo}\n\tRequest A Proxy List [HTTP, HTTPS, SOCKS4, SOCKS5] {r}⇒{m0}  "
+    ui_main = f"{logo}\n\n\t{p}FPS{r}:{m0} To Find Proxies\n\tProxy List Path {r}({p}IP:Port{r}, {p}File Path{r}, {p}Link) {r}⇒{m0}  "
     ui_proxy_type = f"{logo}\n\tProxy Type [HTTP, SOCKS4, SOCKS5] {r}⇒{m0}  "
     ui_owp = f"{logo}\n\tPrint Only Working Proxies [Y,N] {r}⇒{m0}  "
     ui_threads = f"{logo}\n\tNumber Of Threads {r}⇒{m0}  "
@@ -53,11 +54,24 @@ try:
     owp = False
 
 
+    # PKPL Url
+    pkpl_url = "https://raw.githubusercontent.com/the-computer-mayor/computer-mayor-db/main/PKPL.json"
+
+
 
 
     # Clear Screen Function
     def cls():
         print("\x1B[2J\x1B[H")
+
+
+
+
+    # Extract Json From Output Function
+    def extract_json(string:str):
+        for x in range(len(string)):
+            if string[x] == '{':
+                return loads(string[x:])
 
 
 
@@ -213,7 +227,7 @@ try:
 
         elif "libcurl version doesn't support" in output:
             return ["invalid_input", "http_version_unsupported", {"curl": f"curl: option --http{http_version}: the installed libcurl version doesn't support this"}]
-        
+
         else:
             return ["proxy_failed", "proxy_failed_transmitting_http_request", {"time_spent": TimeConnect}]
 
@@ -242,10 +256,8 @@ try:
                 time_spent = str("{:.4f}".format(cp[1]))+"ms"
 
                 try:
-                    for x in range(len(cp[2])):
-                        if cp[2][x] == '{':
-                            output_json = loads(cp[2][x:])
-                    
+                    output_json = extract_json(cp[2])
+
                     city = output_json["city"]
                     country = output_json["country"]
                     location_string = f"  {b+country} {p}({city}){m0}"
@@ -265,10 +277,10 @@ try:
             elif cp[0] == "proxy_failed":
                 if cp[1] == "proxy_timeout":
                     if owp == False: print('\n'+' '*44+f"{m0+'{'+r}Timed Out{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
-                
+
                 elif cp[1] == "junk_proxy":
                     if owp == False: print('\n'+' '*44+f"{m0+'{'+r}Junk Proxy{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
-                
+
                 elif cp[1] == "proxy_failed_transmitting_http_request":
                     if owp == False: print('\n'+' '*44+f"{m0+'{'+r}Broken Proxy{m0+'}'}\r"+' '*16+f"{r}[-]  {m0+proxy+b}\r{str(proxies_location_in_list)+m0}",end='')
 
@@ -314,7 +326,7 @@ try:
                         T.daemon = True
                         T.start()
                         in_proccess_threads += 1
-                
+
                     for extra_thread in extra_threads:
                         T = threading.Thread(target=check_proxy_group, args=[[extra_thread], 6969696969])
                         T.daemon = True
@@ -352,12 +364,40 @@ try:
     # Main
     while 1:
         cls(); proxy_list_path = str(input(ui_main))
-        proxy_list_path_is_url = urlparse(proxy_list_path.replace(' ', ''))
+        proxy_list_path_is_url = urlparse(proxy_list_path.replace(' ', '').lower())
+        proxy_list_path_is_url = bool(proxy_list_path_is_url.scheme and proxy_list_path_is_url.netloc)
+        proxy_list_path_is_fps = bool(proxy_list_path.replace(' ', '').lower() in ["fps", "find proxies", "fp", "find_proxies"])
 
 
 
 
-        if proxy_list_path_is_url.scheme and proxy_list_path_is_url.netloc:
+        if proxy_list_path_is_url or proxy_list_path_is_fps:
+            if proxy_list_path_is_fps:
+                request_pkpl_command = [
+                    "curl", "-i", "--http1.1", "-G",
+                    "--url", pkpl_url,
+                    "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0",
+                    "-H", "Accept: */*"
+                ]
+
+                request_pkpl = curl(request_pkpl_command)
+                if "http/1.1 200 ok" not in request_pkpl.lower():
+                    cls(); input(f"{logo}\n\tFailed To Connect To {r+pkpl_url+m0}, Try Again\n")
+                    continue
+                else:
+                    request_pkpl_json = extract_json(request_pkpl)
+
+                while 1:
+                    cls(); request_list = str(input(ui_request_list)).replace(' ', '').lower()
+                    if request_list in list(request_pkpl_json):
+                        all_links = request_pkpl_json[request_list]
+                        shuffle(all_links)
+                        proxy_list_path = all_links[0]
+                        break
+                    else:
+                        cls(); input(f"{logo}\n\tInvalid Input, Try Again\n"); continue
+
+
             cls(); print(f"{logo}\n\tRequesting {r+proxy_list_path+m0}")
 
             request_proxy_list_command = [
@@ -426,10 +466,8 @@ try:
                 time_spent = str("{:.4f}".format(cp[1]))+"ms"
 
                 try:
-                    for x in range(len(cp[2])):
-                        if cp[2][x] == '{':
-                            output_json = loads(cp[2][x:])
-                    
+                    output_json = extract_json(cp[2])
+
                     city = output_json["city"]
                     country = output_json["country"]
                     location_string = f"  {b+country} {p}({city}){m0}"
