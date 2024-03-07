@@ -1,4 +1,4 @@
-# $${\color{white}ProxyKot}$$ $${\color{red}v4}$$
+# $${\color{white}ProxyKot}$$ $${\color{red}v4.8}$$
 ![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/PKv4.png?raw=true)
 # *Installation & Usage*
 For Windows & Linux, requires only `python` (version 3)
