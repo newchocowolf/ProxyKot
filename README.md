@@ -7,15 +7,16 @@ For Windows & Linux, requires only `python` (version 3)
 # Logger
 ![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/PKv4_log.png?raw=true)
 # *Features*
-- Threading to speed up the process ☠
-- Timeout ☠
-- Supports `HTTP` `HTTPS` `SOCKS4` `SOCKS5` proxies ☠
-- Can validate a singular proxy ☠
-- Can validate a file containing list of proxies ☠
-- Can validate a link containing list of proxies ☠
 - No Additional Python Libraries Needed **`Only Regular Python3 Built-In Modules`** ☠
-- Print only working proxies feature ☠
-- Very Easy To Use ☠
+
+- You can sepcify the amount of threads to speed up the process ☠
+- Supports `HTTP` `HTTPS` `SOCKS4` `SOCKS5` proxies ☠
+- Can validate a link containing a list of proxies ☠
+- Can validate a file containing a list of proxies ☠
+- Optional: **Find Proxies** by entering `FPS` ☠
+- Optional: Print only working proxies ☠
+- Can validate a singular proxy ☠
+- You can specify Timeout ☠
 # *Using ProxyKot In Your Python Code*
 ```python
 from proxykot import check_proxy
