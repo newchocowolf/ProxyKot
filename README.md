@@ -2,7 +2,7 @@
 ![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/PKv4.png?raw=true)
 # *Installation & Usage*
 For Windows & Linux, requires only `python` (version 3)
-   - `curl https://raw.githubusercontent.com/the-computer-mayor/ProxyKot/main/proxykot.py -o proxykot.py`
+   - `curl https://raw.githubusercontent.com/vedrich411/ProxyKot/main/proxykot.py -o proxykot.py`
    - `python3 proxykot.py`
 # Logger
 ![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/PKv4_log.png?raw=true)
