@@ -5,7 +5,7 @@ For Windows & Linux, requires only `python` (version 3)
    - `curl https://raw.githubusercontent.com/vedrich411/ProxyKot/main/proxykot.py -o proxykot.py`
    - `python3 proxykot.py`
 # Logger
-![](https://github.com/the-computer-mayor/computer-mayor-db/blob/main/PKv4_log.png?raw=true)
+![](https://github.com/the-computer-mayor/vedrich-db/blob/main/PKv4_log.png?raw=true)
 # *Features*
 - No Additional Python Libraries Needed **`Only Regular Python3 Built-In Modules`** ☠
 
