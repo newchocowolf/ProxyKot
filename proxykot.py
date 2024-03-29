@@ -23,8 +23,8 @@ try:
 
 
     # Ops
-    ui_request_list = f"{logo}\n\tRequest A Proxy List [HTTP, HTTPS, SOCKS4, SOCKS5] {r}⇒{m0}  "
     ui_main = f"{logo}\n\n\t{p}FPS{r}:{m0} To Find Proxies\n\tProxy List Path {r}({p}IP:Port{r}, {p}File Path{r}, {p}Link) {r}⇒{m0}  "
+    ui_request_list = f"{logo}\n\tRequest A Proxy List [HTTP, HTTPS, SOCKS4, SOCKS5] {r}⇒{m0}  "
     ui_proxy_type = f"{logo}\n\tProxy Type [HTTP, SOCKS4, SOCKS5] {r}⇒{m0}  "
     ui_owp = f"{logo}\n\tPrint Only Working Proxies [Y,N] {r}⇒{m0}  "
     ui_threads = f"{logo}\n\tNumber Of Threads {r}⇒{m0}  "
